@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Import useNavigation hook
 import globalStyle from '../assets/styles/globalStyle';
+import EventComponent from '../components/events/EventsComponent';
+import Search from '../components/search/Search';
 
 const HomeScreen = ({navigation}) => {
   const navigateToMainScreen = () => {
@@ -11,12 +13,10 @@ const HomeScreen = ({navigation}) => {
     });
   };
   return (
-    <View style={globalStyle.container}>
-      <Text style={styles.text}>Hello World</Text>
-      <Button
-        title="Go to Attendees"
-        onPress={navigateToMainScreen} // Use the name of your Attendees screen
-      />
+    <View style={[globalStyle.backgroundWhite]}>
+      <View style={globalStyle.container}>
+        <EventComponent />
+      </View>
     </View>
   );
 };

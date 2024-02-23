@@ -5,10 +5,11 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   Image,
+  Keyboard,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -42,7 +43,9 @@ import BadgeScreen from './screens/Badge';
 import AboutScreen from './screens/About';
 import HelpScreen from './screens/Help';
 import ConnexionScreen from './screens/Connexion';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -77,6 +80,30 @@ function ScanButton({children, onPress}) {
 }
 
 function TabNavigator() {
+  const [bottomPadding, setBottomPadding] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      e => {
+        // Optionally, check Platform.OS === 'android' if you only want this behavior on Android
+        // Adjust the bottom padding based on the keyboard height
+        setBottomPadding(e.endCoordinates.height);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setBottomPadding(0); // Reset the padding when keyboard hides
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const [isFilterModalVisible, setFilterModalVisible] = useState(false);
 
   const openFilterModal = () => {
@@ -106,6 +133,7 @@ function TabNavigator() {
           tabBarInactiveTintColor: colors.greyCream,
           tabBarShowLabel: false,
           headerShown: false,
+          keyboardHidesTabBar: true,
         }}>
         <Tab.Screen
           name="Attendees"
@@ -279,4 +307,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-
