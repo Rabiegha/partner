@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
   },
   bar: {
     marginTop: 5,
-    height: 15,
-    width: 140,
+    height: 11,
+    width: 145,
     borderRadius: 15,
   },
   text: {

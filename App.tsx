@@ -33,7 +33,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import MoreScreen from './screens/More';
 import AddAttendeesScreen from './screens/AddAttendees';
-import HomeScreen from './screens/Home';
+import HomeScreen from './screens/Events';
 import MenuScreen from './screens/Menu';
 import QRCodeScannerScreen from './screens/Scann';
 import ModalFilter from './components/modals/ModalFilter';
@@ -45,7 +45,10 @@ import HelpScreen from './screens/Help';
 import ConnexionScreen from './screens/Connexion';
 import {NavigationContainer} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+import EventsScreen from './screens/Events';
+import Events1Screen from './screens/Events1';
+import EventAvenirScreen from './screens/EventsAvenir';
+import EventPasseesScreen from './screens/EventsPassees';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -148,7 +151,7 @@ function TabNavigator() {
                   top: 10,
                 }}>
                 <Image
-                  source={require('../app/assets/images/icons/Participant.png')}
+                  source={require('../attendee/assets/images/icons/Participant.png')}
                   resizeMode="contain"
                   style={{
                     width: 32,
@@ -180,7 +183,7 @@ function TabNavigator() {
                   top: 10,
                 }}>
                 <Image
-                  source={require('../app/assets/images/icons/Ajouts.png')}
+                  source={require('../attendee/assets/images/icons/Ajouts.png')}
                   resizeMode="contain"
                   style={{
                     width: 32,
@@ -202,11 +205,11 @@ function TabNavigator() {
         />
         <Tab.Screen
           name="Scann"
-          component={AddAttendeesScreen}
+          component={QRCodeScannerScreen}
           options={({route}) => ({
             tabBarIcon: ({focused}) => (
               <Image
-                source={require('../app/assets/images/icons/Scan.png')}
+                source={require('../attendee/assets/images/icons/Scan.png')}
                 resizeMode="contain"
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
@@ -249,7 +252,7 @@ function TabNavigator() {
                   top: 10,
                 }}>
                 <Image
-                  source={require('../app/assets/images/icons/Outils.png')}
+                  source={require('../attendee/assets/images/icons/Outils.png')}
                   resizeMode="contain"
                   style={{
                     width: 32,
@@ -282,12 +285,14 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Events" component={HomeScreen} />
+        <Stack.Screen name="Events1" component={Events1Screen} />
         <Stack.Screen name="Tabs" component={TabNavigator} />
         <Stack.Screen name="More" component={MoreScreen} />
         <Stack.Screen name="Badge" component={BadgeScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
         <Stack.Screen name="Help" component={HelpScreen} />
+        <Stack.Screen name="Avenir" component={EventAvenirScreen} />
+        <Stack.Screen name="Passees" component={EventPasseesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

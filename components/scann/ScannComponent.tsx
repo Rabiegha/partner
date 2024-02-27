@@ -3,16 +3,17 @@ import {View, Text, StyleSheet, Alert} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import HeaderComponent from '../header/HeaderComponent';
 import colors from '../../colors/colors';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
-
-const ScannComponent = () => {
-  const navigation = useNavigation();
-  const [scanned, setScanned] = useState(false);
-  const handleBackPress = () => {
-    // Define what happens when back is pressed. For example:
-    navigation.navigate('Attendees'); // This uses React Navigation's goBack function
+const handleBackPress = () => {
+  // Define what happens when back is pressed. For example:
+  navigation.navigate('Attendees'); // This uses React Navigation's goBack function
+};
+const QRCodeScannerComponent = () => {
+  const onSuccess = e => {
+    Alert.alert('QR Code Scanned', e.data, [{text: 'OK'}]);
+    // Handle the scanned data (e.data) as required
   };
 
   const handleBarCodeScanned = ({type, data}) => {
@@ -38,18 +39,12 @@ const ScannComponent = () => {
           handlePress={handleBackPress}
         />
       </View>
-      <RNCamera
-        style={styles.preview}
-        type={RNCamera.Constants.Type.back}
-        onBarCodeRead={scanned ? undefined : handleBarCodeScanned}
-        flashMode={RNCamera.Constants.FlashMode.auto}
-        captureAudio={false} // Set captureAudio to false
-        androidCameraPermissionOptions={{
-          title: 'Permission to use camera',
-          message: 'We need your permission to use your camera',
-          buttonPositive: 'Ok',
-          buttonNegative: 'Cancel',
-        }}
+      <QRCodeScanner
+        onRead={onSuccess}
+        topContent={<Text style={styles.centerText}>Scan your QR code</Text>}
+        bottomContent={<View />}
+        showMarker={true}
+        checkAndroid6Permissions={true}
       />
     </View>
   );
@@ -70,6 +65,12 @@ const styles = StyleSheet.create({
   overlay: {
     zIndex: 1,
   },
+  centerText: {
+    flex: 1,
+    fontSize: 18,
+    padding: 32,
+    color: '#777',
+  },
 });
 
-export default ScannComponent;
+export default QRCodeScannerComponent;

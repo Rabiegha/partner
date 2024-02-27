@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../colors/colors'; // Assuming this path is correct
 
-const ListEvents = ({item, searchQuery}) => {
+const ListEvents = ({item, searchQuery, onPress}) => {
   const navigation = useNavigation();
 
   const highlightSearch = (text, query) => {
@@ -27,12 +27,17 @@ const ListEvents = ({item, searchQuery}) => {
     );
   };
 
-  const handleItemPress = () => {
-    navigation.navigate('Tabs', {itemName: item.name});
+  const handlePress = () => {
+    // Check if onPress is defined before calling it
+    if (typeof onPress === 'function') {
+      onPress(item);
+    } else {
+      console.warn('onPress is not a function or is not defined');
+    }
   };
 
   return (
-    <TouchableOpacity style={styles.listItem}  onPress={handleItemPress}>
+    <TouchableOpacity style={styles.listItem} onPress={handlePress}>
       <View style={styles.listItemContainer}>
         <View style={styles.dateLieu}>
           <Text style={styles.dateLieuText}>19/03/2024</Text>
