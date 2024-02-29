@@ -49,15 +49,21 @@ const SuccessComponent = ({onClose, text}) => {
 
 const styles = StyleSheet.create({
   notification: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.green,
-    backgroundColor: '#FFF',
+    backgroundColor: colors.lightGreen,
     paddingVertical: 15,
     paddingHorizontal: 15,
+    zIndex: 50,
+    marginHorizontal: 20,
   },
   textNotification: {
     flexDirection: 'row',

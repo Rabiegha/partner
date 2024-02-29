@@ -50,15 +50,20 @@ const FailComponent = ({onClose, text}) => {
 
 const styles = StyleSheet.create({
   notification: {
+    position: 'absolute',
+    right: 0,
+    left: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.red,
-    backgroundColor: '#FFF',
+    backgroundColor: colors.lightRed,
     paddingVertical: 15,
     paddingHorizontal: 15,
+    zIndex: 50,
+    marginHorizontal: 20,
   },
   textNotification: {
     flexDirection: 'row',

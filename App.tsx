@@ -10,6 +10,7 @@ import type {PropsWithChildren} from 'react';
 import {
   Image,
   Keyboard,
+  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -33,7 +34,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import MoreScreen from './screens/More';
 import AddAttendeesScreen from './screens/AddAttendees';
-import HomeScreen from './screens/Events';
+import HomeScreen from './screens/Events-';
 import MenuScreen from './screens/Menu';
 import QRCodeScannerScreen from './screens/Scann';
 import ModalFilter from './components/modals/ModalFilter';
@@ -46,7 +47,6 @@ import ConnexionScreen from './screens/Connexion';
 import {NavigationContainer} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import EventsScreen from './screens/Events';
-import Events1Screen from './screens/Events1';
 import EventAvenirScreen from './screens/EventsAvenir';
 import EventPasseesScreen from './screens/EventsPassees';
 
@@ -83,6 +83,22 @@ function ScanButton({children, onPress}) {
 }
 
 function TabNavigator() {
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', e => {
+      // Ajustez selon la hauteur du clavier
+      setKeyboardOffset(e.endCoordinates.height);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardOffset(0);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
   const [bottomPadding, setBottomPadding] = useState(0);
 
   useEffect(() => {
@@ -123,7 +139,7 @@ function TabNavigator() {
         screenOptions={{
           tabBarStyle: {
             position: 'absolute',
-            bottom: 25,
+            bottom: keyboardOffset ? -keyboardOffset : 25,
             left: 20,
             right: 20,
             elevation: 0,
@@ -131,25 +147,23 @@ function TabNavigator() {
             height: 70,
             backgroundColor: colors.darkGrey,
             ...styles.shadow,
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
           },
           tabBarActiveTintColor: colors.green,
           tabBarInactiveTintColor: colors.greyCream,
           tabBarShowLabel: false,
           headerShown: false,
           keyboardHidesTabBar: true,
+          ...(Platform.OS === 'ios' ? {marginTop: 50} : {}),
         }}>
         <Tab.Screen
           name="Attendees"
           component={AttendeesScreen}
           options={{
             tabBarIcon: ({focused}) => (
-              <View
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: 10,
-                }}>
+              <View style={styles.navBarIcons}>
                 <Image
                   source={require('../attendee/assets/images/icons/Participant.png')}
                   resizeMode="contain"
@@ -176,12 +190,7 @@ function TabNavigator() {
           component={AddAttendeesScreen}
           options={{
             tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: 10,
-                }}>
+              <View style={styles.navBarIcons}>
                 <Image
                   source={require('../attendee/assets/images/icons/Ajouts.png')}
                   resizeMode="contain"
@@ -245,12 +254,7 @@ function TabNavigator() {
           component={MenuScreen}
           options={{
             tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: 10,
-                }}>
+              <View style={styles.navBarIcons}>
                 <Image
                   source={require('../attendee/assets/images/icons/Outils.png')}
                   resizeMode="contain"
@@ -285,8 +289,15 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Events1" component={Events1Screen} />
-        <Stack.Screen name="Tabs" component={TabNavigator} />
+        <Stack.Screen name="Events" component={EventsScreen} />
+        <Stack.Screen
+          name="Tabs"
+          component={TabNavigator}
+          options={{
+            headerShown: false,
+            gestureEnabled: false, // Disable gestures for this screen
+          }}
+        />
         <Stack.Screen name="More" component={MoreScreen} />
         <Stack.Screen name="Badge" component={BadgeScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
@@ -308,6 +319,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
+  },
+  navBarIcons: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    ...(Platform.OS === 'ios' ? {marginTop: 20} : {marginTop: 0}),
   },
 });
 

@@ -22,7 +22,7 @@ const Search = ({onChange}) => {
         style={styles.searchInput}
         placeholder="Rechercher..."
         placeholderTextColor="#999"
-        onChangeText={onChange} // Appel de la fonction onChange lorsque le texte change
+        onChangeText={onChange}
       />
     </View>
   );
@@ -35,9 +35,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.greyCream,
     borderRadius: 10,
     padding: 10,
-    borderWidth: 1, // Add a 1px border
-    borderColor: colors.greyCream, // Set the border colo
-    marginTop: -15,
+    borderWidth: 1,
+    borderColor: colors.greyCream,
+    marginTop: -35,
     flexDirection: 'row',
     alignItems: 'center',
   },

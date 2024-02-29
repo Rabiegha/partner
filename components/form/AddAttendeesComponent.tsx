@@ -12,7 +12,7 @@ import SuccessComponent from '../notification/SuccessComponent';
 import FailComponent from '../notification/FailComponent';
 import {useFocusEffect} from '@react-navigation/native'; // import de useFocusEffect
 
-const AddAttendeesComponent = () => {
+const AddAttendeesComponent = ({onPress}) => {
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [email, setEmail] = useState('');
@@ -49,18 +49,6 @@ const AddAttendeesComponent = () => {
     <ScrollView
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled">
-      {success === true && (
-        <SuccessComponent
-          onClose={() => setSuccess(null)}
-          text={'Participant ajouté avec succès'}
-        />
-      )}
-      {success === false && (
-        <FailComponent
-          onClose={() => setSuccess(null)}
-          text={'Participant non ajouté'}
-        />
-      )}
       <TextInput
         style={globalStyle.input}
         placeholder="Nom"
@@ -93,7 +81,7 @@ const AddAttendeesComponent = () => {
         value={societe}
         onChangeText={text => setSociete(text)}
       />
-      <TouchableOpacity style={styles.button} onPress={handleEnregistrer}>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>Enregistrer</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -102,7 +90,7 @@ const AddAttendeesComponent = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 15,
+    marginTop: 50,
     flexGrow: 1,
     padding: 20,
     width: '100%',

@@ -25,7 +25,7 @@ const HeaderParticipants = ({onLeftPress, onRightPress}) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    top: 30,
+    top: 20,
     flexDirection: 'row',
     justifyContent: 'space-between', // Align items to start
     alignItems: 'center',
@@ -34,19 +34,20 @@ const styles = StyleSheet.create({
     position: 'relative',
     maxHeight: 60,
     height: 60,
+    zIndex: 10,
   },
   backButton: {
-    padding: 5,
+    padding: 10,
   },
   buttonImage: {
     width: 15,
-    height: 20,
+    height: 23,
     tintColor: colors.green,
     zIndex: 2,
   },
   buttonImageBlack: {
     tintColor: colors.darkGrey,
-    width: 17,
+    width: 20,
     height: 20,
   },
 });

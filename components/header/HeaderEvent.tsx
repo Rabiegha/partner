@@ -2,24 +2,23 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../colors/colors';
+import SmallButton from '../button/SmallButton';
 
-const HeaderComponent = ({title, handlePress, color}) => {
-  const navigation = useNavigation();
-
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
+const HeaderEvent = ({onLeftPress, onRightPress}) => {
   return (
     <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={handlePress} style={styles.backButton}>
+      <TouchableOpacity onPress={onLeftPress} style={styles.backButton}>
         <Image
-          source={require('../../assets/images/icons/Retour.png')}
+          source={require('../../assets/images/icons/Log-out.png')}
           style={styles.buttonImage}
         />
       </TouchableOpacity>
-      {/* Title is absolutely positioned to ensure it's centered */}
-      <Text style={[styles.title, {color}]}>{title}</Text>
+      <TouchableOpacity onPress={onRightPress} style={styles.backButton}>
+        <Image
+          source={require('../../assets/images/icons/Filtre.png')}
+          style={styles.buttonImageBlack}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -37,26 +36,20 @@ const styles = StyleSheet.create({
     height: 60,
     zIndex: 10,
   },
-  title: {
-    top: 22,
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-  },
   backButton: {
-    justifyContent: 'center',
     padding: 10,
-    zIndex: 10,
   },
   buttonImage: {
-    width: 15,
+    width: 23,
     height: 23,
-    tintColor: colors.green,
+    tintColor: colors.red,
+    zIndex: 2,
+  },
+  buttonImageBlack: {
+    tintColor: colors.darkGrey,
+    width: 20,
+    height: 20,
   },
 });
 
-export default HeaderComponent;
+export default HeaderEvent;

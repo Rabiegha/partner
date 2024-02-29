@@ -1,34 +1,44 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Alert} from 'react-native';
-import {RNCamera} from 'react-native-camera';
+import {View, StyleSheet, Alert} from 'react-native';
 import HeaderComponent from '../header/HeaderComponent';
 import colors from '../../colors/colors';
 import {useNavigation} from '@react-navigation/native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import CustomMarker from './CustomMarker';
 
-const handleBackPress = () => {
-  // Define what happens when back is pressed. For example:
-  navigation.navigate('Attendees'); // This uses React Navigation's goBack function
-};
-const QRCodeScannerComponent = () => {
-  const onSuccess = e => {
-    Alert.alert('QR Code Scanned', e.data, [{text: 'OK'}]);
-    // Handle the scanned data (e.data) as required
+const ScannerComponent = () => {
+  const navigation = useNavigation();
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  // Définir 'handleBackPress' correctement à l'intérieur du composant pour accéder à 'navigation'
+  const handleBackPress = () => {
+    navigation.goBack(); // Utilisez `goBack` ou la navigation spécifique selon vos besoins
   };
 
-  const handleBarCodeScanned = ({type, data}) => {
-    setScanned(true);
-    // You can handle the scanned data here
-    Alert.alert(
-      `Bar code with type ${type} and data ${data} has been scanned!`,
-    );
+  const handleAlertClose = () => {
+    setAlertVisible(false); // Réactiver le scanner une fois l'alerte fermée
+  };
+
+  const onSuccess = e => {
+    if (!alertVisible) {
+      setAlertVisible(true);
+      Alert.alert('Participation enregistrée', e.data, [
+        {
+          text: 'OK',
+          onPress: handleAlertClose,
+        },
+      ]);
+    }
   };
 
   useEffect(() => {
-    return () => {
-      setScanned(false); // Reset scanned state when component unmounts
-    };
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Réinitialiser l'état lorsque le composant est monté ou revenu à la vue
+      setAlertVisible(false);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -39,13 +49,16 @@ const QRCodeScannerComponent = () => {
           handlePress={handleBackPress}
         />
       </View>
-      <QRCodeScanner
-        onRead={onSuccess}
-        topContent={<Text style={styles.centerText}>Scan your QR code</Text>}
-        bottomContent={<View />}
-        showMarker={true}
-        checkAndroid6Permissions={true}
-      />
+      {!alertVisible && (
+        <QRCodeScanner
+          onRead={onSuccess}
+          bottomContent={<View />}
+          showMarker={true}
+          checkAndroid6Permissions={true}
+          cameraStyle={{height: '98%', top: 30}}
+          customMarker={<CustomMarker />}
+        />
+      )}
     </View>
   );
 };
@@ -56,21 +69,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'black',
   },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    zIndex: 0,
-  },
   overlay: {
     zIndex: 1,
   },
-  centerText: {
-    flex: 1,
-    fontSize: 18,
-    padding: 32,
-    color: '#777',
-  },
 });
 
-export default QRCodeScannerComponent;
+export default ScannerComponent;

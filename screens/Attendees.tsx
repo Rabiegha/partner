@@ -53,31 +53,34 @@ const AttendeesScreen = () => {
   const navigation = useNavigation();
 
   const handleGoBack = () => {
-    navigation.navigate('Events');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Events'}],
+    });
   };
   return (
     <View style={globalStyle.backgroundWhite}>
       <HeaderParticipants onLeftPress={handleGoBack} onRightPress={openModal} />
+      {success && (
+        <View style={styles.notification}>
+          <SuccessComponent
+            onClose={() => setSuccess(null)}
+            text={'Votre participation à l’évènement\nà bien été enregistrée'}
+          />
+        </View>
+      )}
       <View style={styles.container}>
         {/* Bouton pour afficher la notification */}
-        <TouchableOpacity onPress={showNotification} style={styles.button}>
-          <Text style={styles.buttonText}>Afficher la notification</Text>
-        </TouchableOpacity>
-
         {/* Affichage conditionnel de la notification */}
-        {success && (
-          <View style={styles.notification}>
-            <SuccessComponent
-              onClose={() => setSuccess(null)}
-              text={'Checked in'}
-            />
-          </View>
-        )}
       </View>
       <View style={[globalStyle.container, styles.container]}>
         <Search onChange={text => setSearchQuery(text)} />
         <ProgressText />
         <ProgressBar progress={40} />
+        <TouchableOpacity onPress={showNotification} style={styles.button}>
+          <Text style={styles.buttonText}>Afficher la notification</Text>
+        </TouchableOpacity>
+
         <List searchQuery={searchQuery} />
 
         <Modal
@@ -122,6 +125,9 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
+  },
+  notification: {
+    zIndex: 50,
   },
 });
 

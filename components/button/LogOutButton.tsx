@@ -12,9 +12,10 @@ const LogOutButton = ({onPress}) => {
         resizeMode="contain"
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
-          width: 32,
-          height: 32,
+          width: 17,
+          height: 17,
           tintColor: colors.red,
+          marginRight: 10,
         }}
       />
       <Text style={styles.buttonText}>Log out</Text>
@@ -26,7 +27,7 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 0,
+    backgroundColor: 'transparent',
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
