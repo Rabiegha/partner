@@ -1,29 +1,35 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, FlatList, Dimensions, StyleSheet, ScrollView} from 'react-native';
+import {View, FlatList, Dimensions, StyleSheet, ScrollView, Text} from 'react-native';
 import ListEvents from './ListEvents';
 import SwitchTopBar from '../elements/SwitchTopBar';
 import colors from '../../colors/colors';
 import Search from '../search/Search';
 
 const {width} = Dimensions.get('window');
-const Data = Array.from({length: 4}, (_, index) => ({
-  id: index.toString(),
-  name: `Item ${index + 1}`,
-  isOn: false,
-}));
 
 const EventComponent = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState(Data);
   const scrollViewRef = useRef(null);
-  const [currentPage, setCurrentPage] = useState(0); // Nouvel état pour suivre la page actuelle
+  const [currentPage, setCurrentPage] = useState(0);
+  const [eventDetails, setEventDetails] = useState([]);
 
   useEffect(() => {
-    const filteredItems = Data.filter(item =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-    setFilteredData(filteredItems);
-  }, [searchQuery]);
+    const fetchEventDetails = async () => {
+      try {
+        const response = await getEventDetails();
+        if (response && response.status) {
+          setEventDetails(response.event_details);
+        } else {
+          console.error('Failed to fetch event details');
+        }
+      } catch (error) {
+        console.error('Error fetching event details:', error);
+      }
+    };
+
+    fetchEventDetails();
+  }, []);
 
   const handleScroll = event => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
@@ -47,23 +53,15 @@ const EventComponent = () => {
           setCurrentPage(1); // Assurez-vous que l'état de la page actuelle est mis à jour
         }}
       />
-      <ScrollView
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        ref={scrollViewRef}
-        onScroll={handleScroll}
-        scrollEventThrottle={16} // Fréquence de mise à jour pour l'événement de défilement
-      >
+      <View>
         {/* Section 1 */}
         <View style={{width}}>
-          <FlatList
-            data={filteredData}
-            keyExtractor={item => item.id}
-            renderItem={({item}) => (
-              <ListEvents item={item} searchQuery={searchQuery} />
-            )}
-          />
+          {eventDetails.map((event, index) => (
+            <View key={index} style={{width}}>
+              <Text>{event.name}</Text>
+              {/* Render other event details as needed */}
+            </View>
+          ))}
         </View>
         {/* Section 2 */}
         <View style={{width}}>
@@ -75,7 +73,7 @@ const EventComponent = () => {
             )}
           />
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };

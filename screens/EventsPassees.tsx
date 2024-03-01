@@ -1,44 +1,58 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {View, FlatList, Dimensions, StyleSheet, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, FlatList, StyleSheet} from 'react-native';
+import axios from 'axios'; // Assurez-vous d'importer axios
+import {MMKV} from 'react-native-mmkv'; // Assurez-vous d'importer MMKV si vous l'utilisez pour le stockage
+
 import Search from '../components/search/Search';
-import {colors} from 'react-native-elements';
 import ListEvents from '../components/events/ListEvents';
 import globalStyle from '../assets/styles/globalStyle';
 
-const Data = Array.from({length: 4}, (_, index) => ({
-  id: index.toString(),
-  name: `Item ${index + 1}`,
-  isOn: false,
-  date: `19/03/202${index + 1}`, // Example date
-  lieu: `Location ${index + 1}`, // Example location
-}));
+// Assurez-vous que `current_user_login_details_id` est disponible
+const current_user_login_details_id = '91'; // Remplacez par l'ID utilisateur actuel
 
 const EventPasseesScreen = ({searchQuery, onPress}) => {
-  const [filteredData, setFilteredData] = useState(Data);
+  const [eventDetails, setEventDetails] = useState([]);
 
   useEffect(() => {
-    const filteredItems = Data.filter(item =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-    setFilteredData(filteredItems);
-  }, [searchQuery]);
+    const getEventDetails = async () => {
+      try {
+        const url = `https://ems.choyou.fr/event_api/ajax_get_event_details/?user_id=${current_user_login_details_id}&is_event_from=0`;
+        const response = await axios.get(url);
+        if (response.data.status) {
+          setEventDetails(response.data.event_details);
+        } else {
+          console.error('Failed to fetch event details');
+        }
+      } catch (error) {
+        console.error('Error fetching event details:', error);
+      }
+    };
+
+    getEventDetails();
+  }, []);
+
+  const filteredEvents = eventDetails.filter(event =>
+    event.event_name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <View style={[styles.container, globalStyle.backgroundWhite]}>
-      {/* Section 1 */}
-      <View>
-        <FlatList
-          data={filteredData}
-          keyExtractor={item => item.id}
-          renderItem={({item}) => (
+      <FlatList
+        data={filteredEvents}
+        keyExtractor={item => item.event_id.toString()}
+        renderItem={({item}) => {
+          console.log(item.nice_start_datetime); // Add this line to display the details of each item
+          return (
             <ListEvents
-              item={item}
+              eventName={item.event_name} // Pass the event name directly as a prop
               searchQuery={searchQuery}
-              onPress={onPress}
+              onPress={() => onPress(item)}
+              eventDate={item.nice_start_datetime}
+              eventType={item.event_type_name}
             />
-          )}
-        />
-      </View>
+          );
+        }}
+      />
     </View>
   );
 };

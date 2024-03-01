@@ -289,6 +289,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Connexion" component={ConnexionScreen} />
         <Stack.Screen name="Events" component={EventsScreen} />
         <Stack.Screen
           name="Tabs"

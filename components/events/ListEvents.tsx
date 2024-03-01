@@ -3,10 +3,20 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../colors/colors'; // Assuming this path is correct
 
-const ListEvents = ({item, searchQuery, onPress}) => {
+const ListEvents = ({
+  eventName,
+  searchQuery,
+  onPress,
+  eventDate,
+  eventType,
+}) => {
   const navigation = useNavigation();
 
   const highlightSearch = (text, query) => {
+    if (!text) {
+      return null; // or any default value you want to return when text is undefined
+    }
+
     if (!query) {
       return <Text style={{color: 'black'}}>{text}</Text>;
     }
@@ -30,7 +40,7 @@ const ListEvents = ({item, searchQuery, onPress}) => {
   const handlePress = () => {
     // Check if onPress is defined before calling it
     if (typeof onPress === 'function') {
-      onPress(item);
+      onPress(eventName);
     } else {
       console.warn('onPress is not a function or is not defined');
     }
@@ -40,11 +50,11 @@ const ListEvents = ({item, searchQuery, onPress}) => {
     <TouchableOpacity style={styles.listItem} onPress={handlePress}>
       <View style={styles.listItemContainer}>
         <View style={styles.dateLieu}>
-          <Text style={styles.dateLieuText}>19/03/2024</Text>
-          <Text style={styles.dateLieuText}>Paris</Text>
+          <Text style={styles.dateLieuText}>{eventDate}</Text>
+          <Text style={styles.dateLieuText}>{eventType}</Text>
         </View>
         <Text style={styles.itemName}>
-          {highlightSearch(item.name, searchQuery)}
+          {highlightSearch(eventName, searchQuery)}
         </Text>
       </View>
     </TouchableOpacity>
@@ -62,7 +72,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: '100%',
     marginBottom: 10,
-    height: 70,
+    height: 100,
   },
   dateLieu: {
     flexDirection: 'column',
@@ -70,11 +80,12 @@ const styles = StyleSheet.create({
     borderRightWidth: 0.5,
     paddingRight: 17,
     borderRightColor: colors.grey,
+    maxWidth: 150,
   },
   dateLieuText: {
     textAlign: 'right',
     color: colors.grey,
-    fontSize: 16,
+    fontSize: 18,
   },
   lieu: {
     textAlign: 'right',
