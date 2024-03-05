@@ -6,17 +6,19 @@ import {MMKV} from 'react-native-mmkv'; // Assurez-vous d'importer MMKV si vous 
 import Search from '../components/search/Search';
 import ListEvents from '../components/events/ListEvents';
 import globalStyle from '../assets/styles/globalStyle';
+import {useEvent} from '../components/EventContext';
+import {useNavigation} from '@react-navigation/native';
 
 // Assurez-vous que `current_user_login_details_id` est disponible
 const current_user_login_details_id = '91'; // Remplacez par l'ID utilisateur actuel
 
-const EventAvenirScreen = ({searchQuery, onPress}) => {
+const EventAvenirScreen = ({ searchQuery, onEventSelect }) => {
   const [eventDetails, setEventDetails] = useState([]);
 
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const url = `https://ems.choyou.fr/event_api/ajax_get_event_details/?user_id=${current_user_login_details_id}&is_event_from=2`;
+        const url = `https://ems.choyou.fr/event_api/ajax_get_event_details/?user_id=${current_user_login_details_id}&is_event_from=0`;
         const response = await axios.get(url);
         if (response.data.status) {
           setEventDetails(response.data.event_details);
@@ -34,6 +36,9 @@ const EventAvenirScreen = ({searchQuery, onPress}) => {
   const filteredEvents = eventDetails.filter(event =>
     event.event_name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  const handleSelectEvent = event => {
+    onEventSelect(event); // Utilisez le callback pour passer les données de l'événement
+  };
 
   return (
     <View style={[styles.container, globalStyle.backgroundWhite]}>
@@ -41,12 +46,11 @@ const EventAvenirScreen = ({searchQuery, onPress}) => {
         data={filteredEvents}
         keyExtractor={item => item.event_id.toString()}
         renderItem={({item}) => {
-          console.log(item.event_name); // Add this line to display the details of each item
           return (
             <ListEvents
               eventName={item.event_name} // Pass the event name directly as a prop
               searchQuery={searchQuery}
-              onPress={() => onPress(item)}
+              onPress={handleSelectEvent}
               eventDate={item.nice_start_datetime}
               eventType={item.event_type_name}
             />

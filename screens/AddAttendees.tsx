@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import AddAttendeesComponent from '../components/form/AddAttendeesComponent';
 import HeaderComponent from '../components/header/HeaderComponent';
 import ParticipantAjoute from '../components/notification/SuccessComponent';
 import globalStyle from '../assets/styles/globalStyle';
 import FailComponent from '../components/notification/FailComponent';
 import SuccessComponent from '../components/notification/SuccessComponent';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import {useEvent} from '../components/EventContext';
 
 const AddAttendeesScreen = ({navigation}) => {
-  const [success, setSuccess] = useState(null); // Null au départ
+  const [success, setSuccess] = useState(null);
+  const {secretCode, eventId} = useEvent();
 
   const handleEnregistrer = () => {
     // Logique pour traiter les données du formulaire
@@ -53,7 +55,12 @@ const AddAttendeesScreen = ({navigation}) => {
           text={'Participant non ajouté'}
         />
       )}
-      <AddAttendeesComponent onPress={handleEnregistrer} style={[globalStyle.container, {marginTop: 50}]} />
+      <AddAttendeesComponent
+        onPress={handleEnregistrer}
+        style={[globalStyle.container, {marginTop: 50}]}
+      />
+      <Text>Secret Code: {secretCode}</Text>
+      <Text>Event ID: {eventId}</Text>
     </View>
   );
 };

@@ -49,6 +49,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import EventsScreen from './screens/Events';
 import EventAvenirScreen from './screens/EventsAvenir';
 import EventPasseesScreen from './screens/EventsPassees';
+import {EventProvider} from './components/EventContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -135,148 +136,150 @@ function TabNavigator() {
 
   return (
     <View style={{flex: 1}}>
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: {
-            position: 'absolute',
-            bottom: keyboardOffset ? -keyboardOffset : 25,
-            left: 20,
-            right: 20,
-            elevation: 0,
-            borderRadius: 15,
-            height: 70,
-            backgroundColor: colors.darkGrey,
-            ...styles.shadow,
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          tabBarActiveTintColor: colors.green,
-          tabBarInactiveTintColor: colors.greyCream,
-          tabBarShowLabel: false,
-          headerShown: false,
-          keyboardHidesTabBar: true,
-          ...(Platform.OS === 'ios' ? {marginTop: 50} : {}),
-        }}>
-        <Tab.Screen
-          name="Attendees"
-          component={AttendeesScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View style={styles.navBarIcons}>
-                <Image
-                  source={require('../attendee/assets/images/icons/Participant.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 32,
-                    height: 32,
-                    tintColor: focused ? colors.green : colors.greyCream,
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? colors.green : colors.greyCream,
-                    fontSize: 8,
-                  }}>
-                  Participants
-                </Text>
-              </View>
-            ),
-          }}
-        />
+      <EventProvider>
+        <Tab.Navigator
+          screenOptions={{
+            tabBarStyle: {
+              position: 'absolute',
+              bottom: keyboardOffset ? -keyboardOffset : 25,
+              left: 20,
+              right: 20,
+              elevation: 0,
+              borderRadius: 15,
+              height: 70,
+              backgroundColor: colors.darkGrey,
+              ...styles.shadow,
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            tabBarActiveTintColor: colors.green,
+            tabBarInactiveTintColor: colors.greyCream,
+            tabBarShowLabel: false,
+            headerShown: false,
+            keyboardHidesTabBar: true,
+            ...(Platform.OS === 'ios' ? {marginTop: 50} : {}),
+          }}>
+          <Tab.Screen
+            name="Attendees"
+            component={AttendeesScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <View style={styles.navBarIcons}>
+                  <Image
+                    source={require('../attendee/assets/images/icons/Participant.png')}
+                    resizeMode="contain"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      tintColor: focused ? colors.green : colors.greyCream,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: focused ? colors.green : colors.greyCream,
+                      fontSize: 8,
+                    }}>
+                    Participants
+                  </Text>
+                </View>
+              ),
+            }}
+          />
 
-        <Tab.Screen
-          name="Add"
-          component={AddAttendeesScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View style={styles.navBarIcons}>
+          <Tab.Screen
+            name="Add"
+            component={AddAttendeesScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <View style={styles.navBarIcons}>
+                  <Image
+                    source={require('../attendee/assets/images/icons/Ajouts.png')}
+                    resizeMode="contain"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      tintColor: focused ? colors.green : colors.greyCream,
+                    }}
+                  />
+                  <Text
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    style={{
+                      color: focused ? colors.green : colors.greyCream,
+                      fontSize: 8,
+                    }}>
+                    Ajouts
+                  </Text>
+                </View>
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Scann"
+            component={QRCodeScannerScreen}
+            options={({route}) => ({
+              tabBarIcon: ({focused}) => (
                 <Image
-                  source={require('../attendee/assets/images/icons/Ajouts.png')}
+                  source={require('../attendee/assets/images/icons/Scan.png')}
                   resizeMode="contain"
-                  style={{
-                    width: 32,
-                    height: 32,
-                    tintColor: focused ? colors.green : colors.greyCream,
-                  }}
-                />
-                <Text
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
-                    color: focused ? colors.green : colors.greyCream,
-                    fontSize: 8,
-                  }}>
-                  Ajouts
-                </Text>
-              </View>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Scann"
-          component={QRCodeScannerScreen}
-          options={({route}) => ({
-            tabBarIcon: ({focused}) => (
-              <Image
-                source={require('../attendee/assets/images/icons/Scan.png')}
-                resizeMode="contain"
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  width: 60,
-                  height: 60,
-                  tintColor: colors.greyCream,
-                }}
-              />
-            ),
-            tabBarButton: props => <ScanButton {...props} />,
-            tabBarStyle: {display: 'none'},
-          })}
-        />
-
-        <Tab.Screen
-          name="Filtre"
-          component={HomeScreen} // Dummy component
-          listeners={{
-            tabPress: e => {
-              // Prevent default action
-              e.preventDefault();
-              openFilterModal();
-            },
-          }}
-          options={{
-            tabBarButton: props => (
-              <CustomTabButton {...props} onPress={openFilterModal} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Menu"
-          component={MenuScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View style={styles.navBarIcons}>
-                <Image
-                  source={require('../attendee/assets/images/icons/Outils.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 32,
-                    height: 32,
-                    tintColor: focused ? colors.green : colors.greyCream,
+                    width: 60,
+                    height: 60,
+                    tintColor: colors.greyCream,
                   }}
                 />
-                <Text
-                  style={{
-                    color: focused ? colors.green : colors.greyCream,
-                    fontSize: 8,
-                  }}>
-                  Outils
-                </Text>
-              </View>
-            ),
-            tabBarStyle: {display: 'none'},
-          }}
-        />
-      </Tab.Navigator>
+              ),
+              tabBarButton: props => <ScanButton {...props} />,
+              tabBarStyle: {display: 'none'},
+            })}
+          />
+
+          <Tab.Screen
+            name="Filtre"
+            component={HomeScreen} // Dummy component
+            listeners={{
+              tabPress: e => {
+                // Prevent default action
+                e.preventDefault();
+                openFilterModal();
+              },
+            }}
+            options={{
+              tabBarButton: props => (
+                <CustomTabButton {...props} onPress={openFilterModal} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Menu"
+            component={MenuScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <View style={styles.navBarIcons}>
+                  <Image
+                    source={require('../attendee/assets/images/icons/Outils.png')}
+                    resizeMode="contain"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      tintColor: focused ? colors.green : colors.greyCream,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: focused ? colors.green : colors.greyCream,
+                      fontSize: 8,
+                    }}>
+                    Outils
+                  </Text>
+                </View>
+              ),
+              tabBarStyle: {display: 'none'},
+            }}
+          />
+        </Tab.Navigator>
+      </EventProvider>
       <ModalFilter
         isVisible={isFilterModalVisible}
         closeModal={closeFilterModal}
@@ -287,26 +290,28 @@ function TabNavigator() {
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Connexion" component={ConnexionScreen} />
-        <Stack.Screen name="Events" component={EventsScreen} />
-        <Stack.Screen
-          name="Tabs"
-          component={TabNavigator}
-          options={{
-            headerShown: false,
-            gestureEnabled: false, // Disable gestures for this screen
-          }}
-        />
-        <Stack.Screen name="More" component={MoreScreen} />
-        <Stack.Screen name="Badge" component={BadgeScreen} />
-        <Stack.Screen name="About" component={AboutScreen} />
-        <Stack.Screen name="Help" component={HelpScreen} />
-        <Stack.Screen name="Avenir" component={EventAvenirScreen} />
-        <Stack.Screen name="Passees" component={EventPasseesScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <EventProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          {/* <Stack.Screen name="Connexion" component={ConnexionScreen} /> */}
+          <Stack.Screen name="Events" component={EventsScreen} />
+          <Stack.Screen
+            name="Tabs"
+            component={TabNavigator}
+            options={{
+              headerShown: false,
+              gestureEnabled: false, // Disable gestures for this screen
+            }}
+          />
+          <Stack.Screen name="More" component={MoreScreen} />
+          <Stack.Screen name="Badge" component={BadgeScreen} />
+          <Stack.Screen name="About" component={AboutScreen} />
+          <Stack.Screen name="Help" component={HelpScreen} />
+          <Stack.Screen name="Avenir" component={EventAvenirScreen} />
+          <Stack.Screen name="Passees" component={EventPasseesScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </EventProvider>
   );
 }
 

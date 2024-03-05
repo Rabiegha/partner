@@ -11,6 +11,8 @@ import globalStyle from '../../assets/styles/globalStyle';
 import SuccessComponent from '../notification/SuccessComponent';
 import FailComponent from '../notification/FailComponent';
 import {useFocusEffect} from '@react-navigation/native'; // import de useFocusEffect
+import axios from 'axios';
+import {useRoute} from '@react-navigation/native';
 
 const AddAttendeesComponent = ({onPress}) => {
   const [nom, setNom] = useState('');
@@ -19,22 +21,48 @@ const AddAttendeesComponent = ({onPress}) => {
   const [numeroTelephone, setNumeroTelephone] = useState('');
   const [societe, setSociete] = useState('');
   const [success, setSuccess] = useState(null); // Null au départ
+  const route = useRoute();
 
-  const handleEnregistrer = () => {
+  const handleEnregistrer = async () => {
     // Logique pour traiter les données du formulaire
-    console.log('Nom:', nom);
-    console.log('Prénom:', prenom);
-    console.log('Email:', email);
-    console.log('Numéro de téléphone:', numeroTelephone);
-    console.log('Société:', societe);
+    const attendeeData = {
+      send_confirmation_mail_ems_yn: 0,
+      generate_qrcode: 0,
+      generate_badge: 0,
+      send_badge_yn: 0,
+      // Plus d'options...
+      ems_secret_code: 'm6enjslzk1qzkxqc9t67mjpes3046s',
+      salutation: 'mr',
+      first_name: prenom,
+      last_name: nom,
+      email: email,
+      phone: numeroTelephone,
+      organization: societe,
+      designation: 'd',
+      status_id: '2',
+      attendee_status: '2',
+      // Définissez d'autres champs requis par votre API...
+    };
 
-    // Simulons le succès ou l'échec de l'enregistrement ici
-    const enregistrementReussi = false; // Mettez à false pour simuler un échec
+    try {
+      const url = `https://ems.choyou.fr/event_api/add_attendee/?ems_secret_code=${attendeeData.ems_secret_code}&salutation=${attendeeData.salutation}&first_name=${attendeeData.first_name}&last_name=${attendeeData.last_name}&email=${attendeeData.email}&phone=${attendeeData.phone}&organization=${attendeeData.organization}&designation=88&status_id=2&attendee_status=2`;
 
-    if (enregistrementReussi) {
-      setSuccess(true); // Enregistrement réussi
-    } else {
-      setSuccess(false); // Enregistrement échoué
+      // Make a GET request with Axios to the constructed URL
+      const response = await axios.post(url);
+
+      /*       const url = 'https://ems.choyou.fr/event_api/add_attendee/';
+      const response = await axios.post(url, attendeeData); */
+
+      if (response.data.status) {
+        console.log('Enregistrement réussi:', response.data);
+        setSuccess(true);
+      } else {
+        console.error('Enregistrement échoué:', response.data.message);
+        setSuccess(false);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement:", error);
+      setSuccess(false);
     }
   };
 
@@ -81,7 +109,7 @@ const AddAttendeesComponent = ({onPress}) => {
         value={societe}
         onChangeText={text => setSociete(text)}
       />
-      <TouchableOpacity style={styles.button} onPress={onPress}>
+      <TouchableOpacity style={styles.button} onPress={handleEnregistrer}>
         <Text style={styles.buttonText}>Enregistrer</Text>
       </TouchableOpacity>
     </ScrollView>
