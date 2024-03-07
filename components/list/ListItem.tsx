@@ -43,7 +43,7 @@ const ListItem = ({item, searchQuery}) => {
     <TouchableOpacity onPress={handleItemPress}>
       <View style={styles.listItemContainer}>
         <Text style={styles.itemName}>
-          {highlightSearch(item.name, searchQuery)}
+          {highlightSearch(item.first_name, searchQuery)} {item.last_name}
         </Text>
         <CustomSwitch value={isSwitchOn} onValueChange={handleSwitchToggle} />
       </View>

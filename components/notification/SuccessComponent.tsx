@@ -50,7 +50,7 @@ const SuccessComponent = ({onClose, text}) => {
 const styles = StyleSheet.create({
   notification: {
     position: 'absolute',
-    top: 20,
+    top: 0,
     left: 0,
     right: 0,
     flexDirection: 'row',

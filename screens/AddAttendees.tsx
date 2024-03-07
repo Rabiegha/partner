@@ -43,18 +43,6 @@ const AddAttendeesScreen = ({navigation}) => {
         color={undefined}
         handlePress={handleGoBack}
       />
-      {success === true && (
-        <SuccessComponent
-          onClose={() => setSuccess(null)}
-          text={'Participant ajouté avec succès'}
-        />
-      )}
-      {success === false && (
-        <FailComponent
-          onClose={() => setSuccess(null)}
-          text={'Participant non ajouté'}
-        />
-      )}
       <AddAttendeesComponent
         onPress={handleEnregistrer}
         style={[globalStyle.container, {marginTop: 50}]}
