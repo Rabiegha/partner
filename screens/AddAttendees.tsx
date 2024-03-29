@@ -1,18 +1,23 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import AddAttendeesComponent from '../components/form/AddAttendeesComponent';
-import HeaderComponent from '../components/header/HeaderComponent';
-import ParticipantAjoute from '../components/notification/SuccessComponent';
+import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import AddAttendeesComponent from '../components/screens/AddAttendeesComponent';
+import HeaderComponent from '../components/elements/header/HeaderComponent';
 import globalStyle from '../assets/styles/globalStyle';
-import FailComponent from '../components/notification/FailComponent';
-import SuccessComponent from '../components/notification/SuccessComponent';
 import {useFocusEffect} from '@react-navigation/native';
-import {useEvent} from '../components/EventContext';
+import {useEvent} from '../components/context/EventContext';
 
 const AddAttendeesScreen = ({navigation}) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content'); // Set status bar style to light-content
+      return () => {
+        // This is useful if this screen has a unique StatusBar style                                                                                                                                                          '); // Reset status bar style when screen loses focus
+      };
+    }, []),
+  );
+
   const [success, setSuccess] = useState(null);
   const {secretCode, eventId} = useEvent();
-
   const handleEnregistrer = () => {
     // Logique pour traiter les données du formulaire
 
@@ -43,12 +48,12 @@ const AddAttendeesScreen = ({navigation}) => {
         color={undefined}
         handlePress={handleGoBack}
       />
+{/*       <Text>Secret Code: {secretCode}</Text>
+      <Text>Event ID: {eventId}</Text> */}
       <AddAttendeesComponent
         onPress={handleEnregistrer}
         style={[globalStyle.container, {marginTop: 50}]}
       />
-      <Text>Secret Code: {secretCode}</Text>
-      <Text>Event ID: {eventId}</Text>
     </View>
   );
 };

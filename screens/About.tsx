@@ -1,9 +1,9 @@
 // MenuScreen.js
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import HeaderComponent from '../components/header/HeaderComponent';
+import HeaderComponent from '../components/elements/header/HeaderComponent';
 import colors from '../colors/colors';
-import MenuListComponent from '../components/menu/MenuListComponent';
+import MenuListComponent from '../components/screens/menu/MenuListComponent';
 import globalStyle from '../assets/styles/globalStyle';
 
 const AboutScreen = ({navigation}) => {

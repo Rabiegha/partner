@@ -8,18 +8,23 @@ import {
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  StatusBar,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import globalStyle from '../assets/styles/globalStyle';
 import EventPasseesScreen from './EventsPassees';
 import EventAvenirScreen from './EventsAvenir';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
 import colors from '../colors/colors';
-import Search from '../components/search/Search';
+import Search from '../components/elements/Search';
 import {useNavigation} from '@react-navigation/native';
 import FiltreComponent from '../components/filtre/FiltreComponent';
-import HeaderEvent from '../components/header/HeaderEvent';
-import {useEvent} from '../components/EventContext';
+import HeaderEvent from '../components/elements/header/HeaderEvent';
+import {useEvent} from '../components/context/EventContext';
+import {logoutUser} from '../components/api/Login-out';
+import {MMKV} from 'react-native-mmkv';
+
+const storage = new MMKV();
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -62,6 +67,15 @@ function MyTabs({searchQuery, onEventSelect}) {
 
 // Composant principal EventsScreen
 const EventsScreen = () => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content'); // Use 'light-content' if you prefer the light mode
+      return () => {
+        // Optionally reset StatusBar style when leaving screen
+        StatusBar.setBarStyle('dark-content'); // Adjust according to your app's needs
+      };
+    }, []),
+  );
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAnimation] = useState(new Animated.Value(-300));
   const openModal = () => {
@@ -89,19 +103,26 @@ const EventsScreen = () => {
   const navigation = useNavigation();
 
   const handleEventSelect = event => {
-    console.log('Selected event:', event); // Vérifiez les données de l'événement dans la console
-    const newSecretCode = event.ems_secret_code
-      ? event.ems_secret_code.toString()
-      : '';
-    const newEventId = event.event_id ? event.event_id.toString() : '';
-    console.log('New Secret Code:', newSecretCode); // Vérifiez le nouveau code secret
-    console.log('New Event Id:', newEventId); // Vérifiez le nouvel ID d'événement
-    setSelectedEvent(event);
-    updateEventDetails({newSecretCode, newEventId});
-    navigation.navigate('Tabs');
+    const {ems_secret_code, event_id, event_name} = event;
+    console.log(ems_secret_code, event_id);
+    updateEventDetails({
+      newSecretCode: ems_secret_code,
+      newEventId: event_id,
+      newEventName: event_name,
+    });
+
+    // Ensuite, naviguez vers l'écran souhaité
+    navigation.navigate('Tabs', {screen: 'Attendees'}); // Assurez-vous que le nom de l'écran est correct
   };
   const handleGoBack = () => {
-    navigation.navigate('Events');
+    // Check if user is authenticated
+    const isLoggedIn = storage.getString('isLoggedIn');
+    if (isLoggedIn) {
+      // If authenticated, log out
+      logoutUser();
+    } else {
+      navigation.navigate('connexion');
+    }
   };
 
   return (

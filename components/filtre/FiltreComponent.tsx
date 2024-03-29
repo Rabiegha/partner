@@ -1,13 +1,13 @@
 // MenuScreen.js
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import HeaderComponent from '../header/HeaderComponent';
+import HeaderComponent from '../elements/header/HeaderComponent';
 import colors from '../../colors/colors';
 import globalStyle from '../../assets/styles/globalStyle';
 import FiltreDetailsComponent from './FiltreDetailsComponent';
-import RedBorderButton from '../button/RedBorderButton';
-import LargeButton from '../button/LargeButton';
-import AppliquerButton from '../button/AppliquerButton';
+import RedBorderButton from '../elements/buttons/RedBorderButton';
+import LargeButton from '../elements/buttons/LargeButton';
+import AppliquerButton from '../elements/buttons/AppliquerButton';
 
 const FiltreComponent = ({handlePress}) => {
   const sections = [

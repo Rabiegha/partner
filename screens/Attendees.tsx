@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Modal,
@@ -7,22 +7,36 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Text,
+  StatusBar,
 } from 'react-native';
-import List from '../components/list/List';
-import Search from '../components/search/Search';
-import ProgressBar from '../components/progress/ProgressBar';
-import ProgressText from '../components/progress/ProgressionText';
+import List from '../components/screens/attendees/List';
+import Search from '../components/elements/Search';
+import ProgressBar from '../components/elements/progress/ProgressBar';
+import ProgressText from '../components/elements/progress/ProgressionText';
 import globalStyle from '../assets/styles/globalStyle';
-import {useNavigation} from '@react-navigation/native';
-import HeaderParticipants from '../components/header/HeaderParticipant';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import HeaderParticipants from '../components/elements/header/HeaderParticipant';
 import FiltreComponent from '../components/filtre/FiltreComponent';
-import SuccessComponent from '../components/notification/SuccessComponent';
+import SuccessComponent from '../components/elements/notifications/SuccessComponent';
+import {useEvent} from '../components/context/EventContext';
 
 const AttendeesScreen = () => {
+  const {eventName} = useEvent();
+  console.log('eventId', eventName);
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content'); // Set status bar style to light-content
+      return () => {
+        // This is useful if this screen has a unique StatusBar style                                                                                                                                                          '); // Reset status bar style when screen loses focus
+      };
+    }, []),
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAnimation] = useState(new Animated.Value(-300));
   const [success, setSuccess] = useState(false);
+  const [totalListAttendees, setTotalListAttendees] = useState(0);
+  const [checkedInAttendees, setCheckedInAttendees] = useState(0);
 
   const openModal = () => {
     setModalVisible(true);
@@ -58,9 +72,29 @@ const AttendeesScreen = () => {
       routes: [{name: 'Events'}],
     });
   };
+
+  useEffect(() => {
+    // Calculate progress when totalAttendees or checkedInAttendees change
+    const progress = (checkedInAttendees / totalListAttendees) * 100;
+    // Progress calculation might need further adjustment based on your logic
+  }, [totalListAttendees, checkedInAttendees]);
+  const [filter, setFilter] = useState({
+    status: 'all', // all, checked-in, not checked-in
+    order: 'mostRecent', // mostRecent, leastRecent
+  });
+  const updateFilter = newFilter => {
+    setFilter(newFilter);
+    closeModal(); // Assuming you want to close the modal on filter apply
+  };
+  const updateProgress = (total, checkedIn) => {
+    setTotalListAttendees(total);
+    setCheckedInAttendees(checkedIn);
+    // Pas besoin de stocker ratio puisqu'il peut être calculé à partir de totalAttendees et checkedInAttendees
+  };
+
   return (
     <View style={globalStyle.backgroundWhite}>
-      <HeaderParticipants onLeftPress={handleGoBack} onRightPress={openModal} />
+      <HeaderParticipants onLeftPress={handleGoBack} onRightPress={openModal} Title={eventName} />
       {success && (
         <View style={styles.notification}>
           <SuccessComponent
@@ -75,13 +109,22 @@ const AttendeesScreen = () => {
       </View>
       <View style={[globalStyle.container, styles.container]}>
         <Search onChange={text => setSearchQuery(text)} />
-        <ProgressText />
-        <ProgressBar progress={40} />
-        <TouchableOpacity onPress={showNotification} style={styles.button}>
+        <ProgressText
+          totalCheckedAttendees={checkedInAttendees}
+          totalAttendees={totalListAttendees}
+        />
+        <ProgressBar
+          progress={(checkedInAttendees / totalListAttendees) * 100}
+        />
+        {/*         <TouchableOpacity onPress={showNotification} style={styles.button}>
           <Text style={styles.buttonText}>Afficher la notification</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <List searchQuery={searchQuery} />
+        <List
+          searchQuery={searchQuery}
+          onUpdateProgress={updateProgress}
+          onShowNotification={showNotification}
+        />
 
         <Modal
           animationType="none"
@@ -98,7 +141,13 @@ const AttendeesScreen = () => {
                   styles.modalView,
                   {transform: [{translateX: modalAnimation}]}, // Use the animated value for the translation
                 ]}>
-                {<FiltreComponent handlePress={closeModal} />}
+                {
+                  <FiltreComponent
+                    handlePress={closeModal}
+                    filter={filter}
+                    setFilter={setFilter}
+                  />
+                }
               </Animated.View>
             </TouchableWithoutFeedback>
           </TouchableOpacity>
@@ -117,6 +166,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  eventName: {
+    top: 40,
   },
   modalView: {
     width: 300, // Width of the modal

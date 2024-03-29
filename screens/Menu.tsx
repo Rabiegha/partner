@@ -1,14 +1,23 @@
 // MenuScreen.js
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import HeaderComponent from '../components/header/HeaderComponent';
+import React, {useEffect} from 'react';
+import {View, StyleSheet, StatusBar} from 'react-native';
+import HeaderComponent from '../components/elements/header/HeaderComponent';
 import colors from '../colors/colors';
-import MenuListComponent from '../components/menu/MenuListComponent';
+import MenuListComponent from '../components/screens/menu/MenuListComponent';
 import globalStyle from '../assets/styles/globalStyle';
-import LogOutButton from '../components/button/LogOutButton';
-import {logoutUser} from '../components/Api/Login-out';
+import LogOutButton from '../components/elements/buttons/LogOutButton';
+import {logoutUser} from '../components/api/Login-out';
+import {useFocusEffect} from '@react-navigation/native';
 
 const MenuScreen = ({navigation}) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content'); // Set status bar style to light-content
+      return () => {
+        StatusBar.setBarStyle('default'); // Reset status bar style when screen loses focus
+      };
+    }, []),
+  );
   const sections = [
     {
       title: 'Menu',
@@ -29,7 +38,7 @@ const MenuScreen = ({navigation}) => {
     // Add more sections as needed
   ];
   const handleLogout = () => {
-    const sessionId = "the_actual_session_id"; // This should be dynamically obtained
+    const sessionId = 'the_actual_session_id'; // This should be dynamically obtained
 
     logoutUser(sessionId);
   };

@@ -1,18 +1,23 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet, StatusBar} from 'react-native';
 import axios from 'axios'; // Assurez-vous d'importer axios
-import {MMKV} from 'react-native-mmkv'; // Assurez-vous d'importer MMKV si vous l'utilisez pour le stockage
-
-import Search from '../components/search/Search';
-import ListEvents from '../components/events/ListEvents';
+import ListEvents from '../components/screens/events/ListEvents';
 import globalStyle from '../assets/styles/globalStyle';
-import {useEvent} from '../components/EventContext';
-import {useNavigation} from '@react-navigation/native';
+import {useEvent} from '../components/context/EventContext';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 // Assurez-vous que `current_user_login_details_id` est disponible
-const current_user_login_details_id = '91'; // Remplacez par l'ID utilisateur actuel
+const current_user_login_details_id = '91';
 
-const EventPasseesScreen = ({ searchQuery, onEventSelect }) => {
+const EventPasseesScreen = ({searchQuery, onEventSelect}) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content'); // Set status bar style to light-content
+      return () => {
+        StatusBar.setBarStyle('dark-content'); // Reset status bar style when screen loses focus
+      };
+    }, []),
+  );
   const [eventDetails, setEventDetails] = useState([]);
 
   useEffect(() => {
@@ -48,7 +53,11 @@ const EventPasseesScreen = ({ searchQuery, onEventSelect }) => {
         renderItem={({item}) => {
           return (
             <ListEvents
-              eventName={item.event_name} // Pass the event name directly as a prop
+              eventData={{
+                event_name: item.event_name,
+                ems_secret_code: item.ems_secret_code.toString(),
+                event_id: item.event_id,
+              }} // Pass the event name directly as a prop
               searchQuery={searchQuery}
               onPress={handleSelectEvent}
               eventDate={item.nice_start_datetime}
