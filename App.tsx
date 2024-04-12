@@ -6,16 +6,20 @@
  */
 
 import {NavigationContainer} from '@react-navigation/native';
-import {EventProvider} from './components/context/EventContext';
-import AppNavigator from './components/NavigationComponent';
+import React from 'react';
+import AppNavigator from './scr/components/NavigationComponent';
+import {EventProvider} from './scr/components/context/EventContext';
+import {AuthProvider} from './scr/components/context/AuthContext';
 
 function App() {
   return (
-    <EventProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </EventProvider>
+    <AuthProvider>
+      <EventProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </EventProvider>
+    </AuthProvider>
   );
 }
 

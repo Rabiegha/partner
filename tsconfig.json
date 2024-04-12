@@ -1,3 +1,23 @@
 {
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "jsx": "react-native",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "lib": ["es2017"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "babel.config.js", "mmetro.config.js, "jejest.config.js,
   "extends": "@react-native/typescript-config/tsconfig.json"
 }
