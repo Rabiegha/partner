@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
-import {useEvent} from '../components/context/EventContext';
+import {useEvent} from '../context/EventContext';
 import axios from 'axios';
 import Share from 'react-native-share';
 import ProfileComponent from '../components/screens/ProfileComponent';

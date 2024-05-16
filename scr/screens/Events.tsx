@@ -10,11 +10,11 @@ import {useNavigation} from '@react-navigation/native';
 /* import FiltreComponent from '../components/event/filtre/FiltreComponent'; */
 import HeaderEvent from '../components/elements/header/HeaderEvent';
 
-import {logoutUser} from '../components/Api/Login-out';
+import {logoutUser} from '../services/Api/Login-out';
 import {MMKV} from 'react-native-mmkv';
 import globalStyle from '../assets/styles/globalStyle';
-import {useEvent} from '../components/context/EventContext';
-import {AuthContext} from '../components/context/AuthContext';
+import {useEvent} from '../context/EventContext';
+import {AuthContext} from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const storage = new MMKV();

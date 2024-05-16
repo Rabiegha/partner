@@ -3,6 +3,9 @@ import {StyleSheet, Image, View, Text} from 'react-native';
 import LargeButton from '../elements/buttons/LargeButton';
 import colors from '../../../colors/colors';
 import SmallButton from '../elements/buttons/SmallButton';
+import emptyGif from '../../assets/images/empty.gif';
+import downloadIcon from '../../assets/images/icons/Download.png';
+import printIcon from '../../assets/images/icons/Print.png';
 
 const BadgeComponent = ({imageUri, share, download, print}) => {
   const [imageLoaded, setImageLoaded] = useState(true);
@@ -19,7 +22,7 @@ const BadgeComponent = ({imageUri, share, download, print}) => {
         ) : (
           <View style={styles.noDataView}>
             <Image
-              source={require('../../assets/images/empty.gif')}
+              source={emptyGif}
               style={styles.gifStyle}
             />
           </View>
@@ -29,13 +32,13 @@ const BadgeComponent = ({imageUri, share, download, print}) => {
         <View style={styles.buttonsContainer}>
           <View style={styles.topButtonsContainer}>
             <SmallButton
-              imageSource={require('../../assets/images/icons/Download.png')}
+              imageSource={downloadIcon}
               pressHandler={download}
               backgroundColor={colors.greyCream}
               tintColor={colors.darkGrey}
             />
             <SmallButton
-              imageSource={require('../../assets/images/icons/Print.png')}
+              imageSource={printIcon}
               pressHandler={print}
               backgroundColor={colors.greyCream}
               tintColor={colors.darkGrey}

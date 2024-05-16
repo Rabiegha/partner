@@ -7,36 +7,36 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import axios from 'axios'; // Assurez-vous d'importer axios
+import axios from 'axios';
 import ListEvents from '../components/screens/events/ListEvents';
-import {useEvent} from '../components/context/EventContext';
+import {useEvent} from '../context/EventContext';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import colors from '../../colors/colors';
-import {MMKV} from 'react-native-mmkv';
 import globalStyle from '../assets/styles/globalStyle';
-import {BASE_URL} from '../config';
-const storage = new MMKV();
+import {BASE_URL} from '../config/config';
+import useUserId from '../hooks/useUserId';
+import empty from '../assets/images/empty.gif';
 
 const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
-  const [userId, setUserId] = useState(storage.getString('user_id'));
+  const [userId, setUserId] = useUserId();
+  const [hasData, setHasData] = useState(false);
+  const [eventDetails, setEventDetails] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const {updateStatsAvenir} = useEvent();
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('dark-content'); // Set status bar style to light-content
+      StatusBar.setBarStyle('dark-content');
       return () => {
         StatusBar.setBarStyle('dark-content'); // Reset status bar style when screen loses focus
       };
     }, []),
   );
-  const [hasData, setHasData] = useState(false);
-  const [eventDetails, setEventDetails] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const {updateStatsAvenir} = useEvent();
 
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const url = `${BASE_URL}/ajax_get_event_details/?user_id=${userId}&is_event_from=2`;
-        const url1 = `${BASE_URL}/ajax_get_event_details/?user_id=${userId}&is_event_from=1`;
+        const url = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=2`;
+        const url1 = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=1`;
 
         // Initialisez un tableau pour stocker les résultats combinés
         let combinedEventDetails = [];
@@ -92,7 +92,7 @@ const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
     event.event_name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   const handleSelectEvent = event => {
-    onEventSelect(event); // Utilisez le callback pour passer les données de l'événement
+    onEventSelect(event); // Utiliser le callback pour passer les données de l'événement
   };
 
   return (
@@ -123,10 +123,7 @@ const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
         />
       ) : (
         <View style={styles.noDataView}>
-          <Image
-            source={require('../assets/images/empty.gif')}
-            style={styles.gifStyle}
-          />
+          <Image source={empty} style={styles.gifStyle} />
         </View>
       )}
     </View>
@@ -152,7 +149,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // Autres styles si nécessaire
 });
 
 export default EventAvenirScreen;

@@ -3,6 +3,8 @@ import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../colors/colors';
 import SmallButton from '../buttons/SmallButton';
+import retourIcon from '../../../assets/images/icons/Retour.png';
+import logOutIcon from '../../../assets/images/icons/Log-out.png';
 
 const HeaderEvent = ({onLeftPress, onRightPress, opacity}) => {
   return (
@@ -10,16 +12,10 @@ const HeaderEvent = ({onLeftPress, onRightPress, opacity}) => {
       <TouchableOpacity
         onPress={onLeftPress}
         style={[styles.backButton, {opacity: opacity}]}>
-        <Image
-          source={require('../../../assets/images/icons/Retour.png')}
-          style={styles.buttonImageBlack}
-        />
+        <Image source={retourIcon} style={styles.buttonImageBlack} />
       </TouchableOpacity>
       <TouchableOpacity onPress={onRightPress} style={styles.backButton}>
-        <Image
-          source={require('../../../assets/images/icons/Log-out.png')}
-          style={styles.buttonImage}
-        />
+        <Image source={logOutIcon} style={styles.buttonImage} />
       </TouchableOpacity>
     </View>
   );
@@ -29,7 +25,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     top: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between', // Align items to start
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 12,

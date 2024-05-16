@@ -3,14 +3,13 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../colors/colors';
 import axios from 'axios';
-import {useEvent} from '../../context/EventContext';
+import {useEvent} from '../../../context/EventContext';
 import CustomSwitch from '../../elements/Switch';
-import { BASE_URL } from '../../../config';
+import { BASE_URL } from '../../../config/config';
 
 const ListItem = React.memo(({item, searchQuery}) => {
   const navigation = useNavigation();
   const {triggerListRefresh} = useEvent();
-  const {eventId} = useEvent();
 
   // Convert attendee_status to boolean for the initial state of the switch
   // Assuming attendee_status is 1 for "on" and 0 for "off"

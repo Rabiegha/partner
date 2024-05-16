@@ -4,7 +4,7 @@ import AddAttendeesComponent from '../components/screens/AddAttendeesComponent';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
 import {useFocusEffect} from '@react-navigation/native';
 import globalStyle from '../assets/styles/globalStyle';
-import {useEvent} from '../components/context/EventContext';
+import {useEvent} from '../context/EventContext';
 
 const AddAttendeesScreen = ({navigation}) => {
   useFocusEffect(

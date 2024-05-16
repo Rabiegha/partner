@@ -8,7 +8,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import BadgeComponent from '../components/screens/BadgeComponent';
 import colors from '../../colors/colors';
 import globalStyle from '../assets/styles/globalStyle';
-import { useEvent } from '../components/context/EventContext';
+import { useEvent } from '../context/EventContext';
 
 const BadgeScreen = ({route, navigation}) => {
   const {triggerListRefresh} = useEvent();

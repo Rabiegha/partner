@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef} from 'react';
 import {
   Animated,
@@ -9,25 +8,26 @@ import {
   View,
 } from 'react-native';
 import colors from '../../../../colors/colors';
+import Fermer from '../../../assets/images/icons/Fermer.png';
+import closeButton from '../../../assets/images/icons/closeButton.png';
 
 const FailComponent = ({onClose, text}) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     // Si isVisible est true, démarrez l'animation
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 500, // Durée plus courte pour un effet rapide
+      duration: 500,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
 
-  // Make sure to render the component regardless of isVisible to allow animation to play
   return (
     <Animated.View style={[styles.notification, {opacity: fadeAnim}]}>
       <View style={styles.textNotification}>
         <Image
-          source={require('../../../assets/images/icons/Fermer.png')}
+          source={Fermer}
           resizeMode="contain"
           style={{
             width: 13,
@@ -39,10 +39,7 @@ const FailComponent = ({onClose, text}) => {
         <Text style={styles.buttonText}>{text}</Text>
       </View>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-        <Image
-          source={require('../../../assets/images/icons/closeButton.png')}
-          style={styles.buttonImage}
-        />
+        <Image source={closeButton} style={styles.buttonImage} />
       </TouchableOpacity>
     </Animated.View>
   );

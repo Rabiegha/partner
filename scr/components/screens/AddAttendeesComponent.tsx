@@ -11,14 +11,16 @@ import {
 import globalStyle from '../../assets/styles/globalStyle';
 import SuccessComponent from '../elements/notifications/SuccessComponent';
 import FailComponent from '../elements/notifications/FailComponent';
-import {useFocusEffect} from '@react-navigation/native'; // import de useFocusEffect
+import {useFocusEffect} from '@react-navigation/native';
 import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
 import {CheckBox} from 'react-native-elements';
 import colors from '../../../colors/colors';
-import {useEvent} from '../context/EventContext';
+import {useEvent} from '../../context/EventContext';
 import PhoneInput from '../elements/PhoneNumberInput';
-import {BASE_URL} from '../../config';
+import {BASE_URL} from '../../config/config';
+import notChecked from '../../assets/images/icons/Not-checked.png';
+import Checked from '../../assets/images/icons/Checked.png';
 
 const AddAttendeesComponent = ({onPress}) => {
   const [nom, setNom] = useState('');
@@ -59,17 +61,13 @@ const AddAttendeesComponent = ({onPress}) => {
       designation: '',
       status_id: '2',
       attendee_status: CheckedIn,
-      // Définissez d'autres champs requis par votre API...
     };
 
     try {
       const url = `${BASE_URL}/add_attendee/?ems_secret_code=${attendeeData.ems_secret_code}&salutation=${attendeeData.salutation}&first_name=${attendeeData.first_name}&last_name=${attendeeData.last_name}&email=${attendeeData.email}&phone=33${attendeeData.phone}&organization=${attendeeData.organization}&designation=88&status_id=${attendeeData.status_id}&attendee_status=${attendeeData.attendee_status}`;
 
-      // Make a GET request with Axios to the constructed URL
+      //GET request with Axios to the constructed URL
       const response = await axios.post(url);
-
-      /*       const url = '${BASE_URL}/add_attendee/';
-      const response = await axios.post(url, attendeeData); */
 
       if (response.data.status) {
         console.log('Enregistrement réussi:', response.data);
@@ -99,9 +97,6 @@ const AddAttendeesComponent = ({onPress}) => {
     setCheckedIn(newCheckedIn);
     console.log(newCheckedIn);
   };
-  const handlePhoneChange = fullPhoneNumber => {
-    console.log(fullPhoneNumber); // Here you can set the full phone number to a state if needed
-  };
   return (
     <View
       style={styles.wrapper}
@@ -121,9 +116,8 @@ const AddAttendeesComponent = ({onPress}) => {
 
       <ScrollView
         contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
-        {/*       <SuccessComponent onClose={undefined} text={'Invité enregisté!'} />
-      <FailComponent onClose={undefined} text={'une erreur est produite!'} /> */}
         <TextInput
           style={globalStyle.input}
           placeholder="Nom"
@@ -161,7 +155,7 @@ const AddAttendeesComponent = ({onPress}) => {
           title={'Check-in'}
           checkedIcon={
             <Image
-              source={require('../../assets/images/icons/Not-checked.png')}
+              source={Checked}
               resizeMode="contain"
               style={{
                 width: 20,
@@ -172,7 +166,7 @@ const AddAttendeesComponent = ({onPress}) => {
           }
           uncheckedIcon={
             <Image
-              source={require('../../assets/images/icons/Checked.png')}
+              source={notChecked}
               resizeMode="contain"
               style={{
                 width: 20,
@@ -183,7 +177,7 @@ const AddAttendeesComponent = ({onPress}) => {
           }
           checked={isChecked}
           onPress={handleCheckboxPress}
-          containerStyle={styles.checkBoxContainer} // Use updated container style
+          containerStyle={styles.checkBoxContainer}
           textStyle={styles.checkBoxText}
         />
 
@@ -214,28 +208,28 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginTop: 20,
-    color: 'black', // Text color
+    color: 'black',
   },
   buttonText: {
-    color: 'white', // Text color
+    color: 'white',
     fontSize: 16,
   },
   checkBoxContainer: {
-    backgroundColor: 'transparent', // Transparent background
-    marginLeft: 0, // Remove left margin
-    marginRight: 0, // Remove right margin
-    marginTop: 10, // Remove top margin
-    marginBottom: 0, // Remove bottom margin
-    padding: 0, // Remove padding
-    borderWidth: 0, // Remove border
-    alignSelf: 'flex-start', // Align left
+    backgroundColor: 'transparent',
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 10,
+    marginBottom: 0,
+    padding: 0,
+    borderWidth: 0,
+    alignSelf: 'flex-start',
   },
   checkBoxText: {
-    color: 'black', // Text color
-    marginLeft: 10, // Margin for text alignment
+    color: 'black',
+    marginLeft: 10,
   },
   contentContainer: {
-    paddingBottom: 300, // Adjust this value based on the height of your bottom tab bar
+    paddingBottom: 300,
   },
 });
 

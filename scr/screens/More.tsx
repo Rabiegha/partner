@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import colors from '../../colors/colors';
-import {useEvent} from '../components/context/EventContext';
+import {useEvent} from '../context/EventContext';
 import axios from 'axios';
 import Share from 'react-native-share';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
 import MoreComponent from '../components/screens/MoreComponent';
 import globalStyle from '../assets/styles/globalStyle';
-import { BASE_URL } from '../config';
+import { BASE_URL } from '../config/config';
 
 const MoreScreen = ({route, navigation}) => {
   const {triggerListRefresh} = useEvent();
@@ -86,7 +86,7 @@ const MoreScreen = ({route, navigation}) => {
         handlePress={handleBackPress}
         color={colors.darkGrey}
       />
-      <View style={globalStyle.container}>
+      <View style={[globalStyle.container, styles.profil]}>
         <MoreComponent
           See={handleBadgePress}
           firstName={firstName}
@@ -104,18 +104,8 @@ const MoreScreen = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginLeft: 30,
-    marginRight: 30,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  itemName: {
-    fontSize: 18,
-    top: 50,
+  profil: {
+    marginTop: -20,
   },
 });
 

@@ -8,35 +8,35 @@ import {
 } from 'react-native';
 import ListItem from './ListItem';
 import axios from 'axios';
-import {useFocusEffect} from '@react-navigation/native';
-import {useEvent} from '../../context/EventContext';
-import ProgressBar from '../../../../components/elements/progress/ProgressBar';
+import {useEvent} from '../../../context/EventContext';
 import colors from '../../../../colors/colors';
-import { BASE_URL } from '../../../config';
+import {BASE_URL} from '../../../config/config';
+import useUserId from '../../../hooks/useUserId';
+import emptyIcon from '../../../assets/images/empty.gif';
 
 const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
   const [filteredData, setFilteredData] = useState([]);
-  const {refreshList} = useEvent();
   const flatListRef = useRef(null);
   const [totalAttendees, setTotalAttendees] = useState(0);
   const [totalCheckedAttendees, setTotalCheckedAttendees] = useState(0);
+  const {refreshList} = useEvent();
   const {eventId} = useEvent();
   console.log('eventId', eventId);
   const [hasData, setHasData] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useUserId();
 
   // Callback function to handle switch toggle in ListItem
   const handleSwitchToggle = () => {
     // Update your data here based on the itemId and newValue
-    // For now, just log the values
   };
 
   useEffect(() => {
     const fetchAllEventAttendeeDetails = async () => {
       setIsLoading(true);
       try {
-        const url = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&attendee_id=91&status_id=2`;
-        const url1 = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&attendee_id=91&status_id=2`;
+        const url = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
+        const url1 = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
         const response = await axios.get(url);
         const response1 = await axios.get(url1);
 
@@ -125,10 +125,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
         />
       ) : (
         <View style={styles.noDataView}>
-          <Image
-            source={require('../../../assets/images/empty.gif')}
-            style={styles.gifStyle}
-          />
+          <Image source={emptyIcon} style={styles.gifStyle} />
         </View>
       )}
     </View>

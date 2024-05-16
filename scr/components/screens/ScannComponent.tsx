@@ -5,9 +5,9 @@ import colors from '../../../colors/colors';
 import {useNavigation} from '@react-navigation/native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import axios from 'axios';
-import {EventProvider, useEvent} from '../context/EventContext';
+import {EventProvider, useEvent} from '../../context/EventContext';
 import CustomMarker from '../elements/CustomMarker';
-import { BASE_URL } from '../../config';
+import { BASE_URL } from '../../config/config';
 
 const ScannerComponent = () => {
   const navigation = useNavigation();

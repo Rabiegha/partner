@@ -1,22 +1,18 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import colors from '../../../../colors/colors';
+import Retour from '../../../assets/images/icons/Retour.png';
+import Filtre from '../../../assets/images/icons/Filtre.png';
 
 const HeaderParticipants = ({onLeftPress, Title, onRightPress}) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity onPress={onLeftPress} style={styles.backButton}>
-        <Image
-          source={require('../../../assets/images/icons/Retour.png')}
-          style={styles.buttonImage}
-        />
+        <Image source={Retour} style={styles.buttonImage} />
       </TouchableOpacity>
       <Text style={styles.Title}>{Title}</Text>
       <TouchableOpacity onPress={onRightPress} style={styles.backButton}>
-        <Image
-          source={require('../../../assets/images/icons/Filtre.png')}
-          style={styles.buttonImageBlack}
-        />
+        <Image source={Filtre} style={styles.buttonImageBlack} />
       </TouchableOpacity>
     </View>
   );
@@ -26,7 +22,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     top: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between', // Align items to start
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 12,

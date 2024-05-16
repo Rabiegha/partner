@@ -1,15 +1,15 @@
 import React from 'react';
 import {View, Image, StyleSheet, Animated} from 'react-native';
+import ScanCameraIcon from '../../assets/images/icons/ScanCamera.png';
 
 const CustomMarker = () => {
   return (
     <View style={styles.rectangleContainer}>
       <Image
-        source={require('../../assets/images/icons/ScanCamera.png')}
+        source={ScanCameraIcon}
         style={[styles.imageStyle]}
         resizeMode="contain"
       />
-      {/* Superposition colorée qui change basée sur la détection du QR code */}
       <Animated.View />
     </View>
   );

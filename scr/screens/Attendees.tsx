@@ -15,7 +15,7 @@ import globalStyle from '../assets/styles/globalStyle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import HeaderParticipants from '../components/elements/header/HeaderParticipant';
 import SuccessComponent from '../components/elements/notifications/SuccessComponent';
-import {useEvent} from '../components/context/EventContext';
+import {useEvent} from '../context/EventContext';
 import Search from '../components/elements/Search';
 import FiltreComponent from '../components/filtre/FiltreComponent';
 

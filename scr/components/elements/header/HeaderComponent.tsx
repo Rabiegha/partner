@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../colors/colors';
+import retourIcon from '../../../assets/images/icons/Retour.png';
 
 const HeaderComponent = ({title, handlePress, color}) => {
   const navigation = useNavigation();
@@ -13,12 +14,8 @@ const HeaderComponent = ({title, handlePress, color}) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity onPress={handlePress} style={styles.backButton}>
-        <Image
-          source={require('../../../assets/images/icons/Retour.png')}
-          style={styles.buttonImage}
-        />
+        <Image source={retourIcon} style={styles.buttonImage} />
       </TouchableOpacity>
-      {/* Title is absolutely positioned to ensure it's centered */}
       <Text style={[styles.title, {color}]}>{title}</Text>
     </View>
   );
@@ -28,7 +25,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     top: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between', // Align items to start
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 12,

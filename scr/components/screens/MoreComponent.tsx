@@ -1,9 +1,13 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Image } from 'react-native';
+import {ScrollView, StyleSheet, View, Image} from 'react-native';
 import LabelValueComponent from '../elements/LabelValueComponent';
 import LargeButton from '../elements/buttons/LargeButton';
 import colors from '../../../colors/colors';
 import SmallButton from '../elements/buttons/SmallButton';
+import userIcon from '../../assets/images/user.png';
+import ScanIcon from '../../assets/images/icons/Scan.png';
+import SuppIcon from '../../assets/images/icons/Supp.png';
+
 
 const MoreComponent = ({
   firstName,
@@ -44,41 +48,47 @@ const MoreComponent = ({
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.imageContainer}>
         <Image
-          source={require('../../assets/images/user.png')}
+          source={userIcon}
           style={styles.image}
         />
       </View>
       <View style={styles.topButtonsContainer}>
         <SmallButton
-          imageSource={require('../../assets/images/icons/Scan.png')}
+          imageSource={ScanIcon}
           pressHandler={See}
           backgroundColor={colors.green}
           tintColor={colors.greyCream}
         />
         <SmallButton
-          imageSource={require('../../assets/images/icons/Supp.png')}
+          imageSource={SuppIcon}
           pressHandler={Share}
           backgroundColor={colors.red}
           tintColor="white"
         />
       </View>
-      <LabelValueComponent label="Nom:" value={firstName} value2={lastName} />
+      <LabelValueComponent
+        label="Nom:"
+        value={firstName && lastName ? `${firstName} ${lastName}` : '- '}
+        value2={undefined}
+      />
       <LabelValueComponent
         label="Adresse mail:"
-        value={email}
+        value={email ? email : '-'}
         value2={undefined}
       />
       <LabelValueComponent
         label="Téléphone:"
-        value={insertSpaceBetweenPairs(phone)}
+        value={phone ? insertSpaceBetweenPairs(phone) : '-'}
         value2={undefined}
       />
       <LabelValueComponent
         label="Entreprise:"
-        value={organization}
+        value={organization ? organization : '-'}
         value2={undefined}
       />
       {attendeeStatus == 0 ? (
@@ -100,8 +110,8 @@ const MoreComponent = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30, // Adjust this value according to your needs
-    paddingBottom: 100, // Additional padding at the bottom to prevent the last element from being cut off
+    paddingTop: 30,
+    paddingBottom: 100,
     alignItems: 'center',
   },
   imageContainer: {

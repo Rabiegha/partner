@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import colors from '../../../../colors/colors';
+import Verifie from '../../../assets/images/icons/Verifie.png';
+import closeButton from '../../../assets/images/icons/closeButton.png';
 
 const SuccessComponent = ({onClose, text}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value
@@ -21,12 +23,11 @@ const SuccessComponent = ({onClose, text}) => {
     }).start();
   }, [fadeAnim]);
 
-  // Make sure to render the component regardless of isVisible to allow animation to play
   return (
     <Animated.View style={[styles.notification, {opacity: fadeAnim}]}>
       <View style={styles.textNotification}>
         <Image
-          source={require('../../../assets/images/icons/Verifie.png')}
+          source={Verifie}
           resizeMode="contain"
           style={{
             width: 15,
@@ -38,10 +39,7 @@ const SuccessComponent = ({onClose, text}) => {
         <Text style={styles.buttonText}>{text}</Text>
       </View>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-        <Image
-          source={require('../../../assets/images/icons/closeButton.png')}
-          style={styles.buttonImage}
-        />
+        <Image source={closeButton} style={styles.buttonImage} />
       </TouchableOpacity>
     </Animated.View>
   );

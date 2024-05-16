@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import colors from '../../../colors/colors';
 import globalStyle from '../../assets/styles/globalStyle';
-
-// Importez l'image que vous souhaitez utiliser comme bouton
 import showPasswordIcon from '../../assets/images/icons/Vu.png';
 import hidePasswordIcon from '../../assets/images/icons/Pas-vu.png';
 import FailComponent from '../elements/notifications/FailComponent';
@@ -22,6 +20,7 @@ const ConnexionComponent = ({
   return (
     <ScrollView
       contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled">
       {success === false && (
         <FailComponent
@@ -34,6 +33,7 @@ const ConnexionComponent = ({
         placeholder="Nom d'utilisateur"
         value={userName}
         onChangeText={setUserName}
+        placeholderTextColor={colors.grey}
       />
       <View style={styles.passwordInputContainer}>
         <TextInput
@@ -42,8 +42,8 @@ const ConnexionComponent = ({
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor={colors.grey}
         />
-        {/* Utilisez une image comme bouton pour afficher ou masquer le mot de passe */}
         <TouchableOpacity
           style={styles.togglePasswordButton}
           onPress={() => setShowPassword(!showPassword)}>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   passwordInput: {
     flex: 1,
-    paddingRight: 40, // Ajoutez un padding pour laisser de la place à l'image
+    paddingRight: 40,
   },
   togglePasswordButton: {
     position: 'absolute',

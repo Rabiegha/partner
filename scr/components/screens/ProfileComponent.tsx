@@ -12,7 +12,8 @@ import colors from '../../../colors/colors';
 import {MMKV} from 'react-native-mmkv';
 import EventsStats from '../elements/EventsStats';
 import axios from 'axios';
-import {BASE_URL} from '../../config';
+import {BASE_URL} from '../../config/config';
+import userIcon from '../../assets/images/user.png';
 
 const storage = new MMKV();
 const user_id = storage.getString('user_id');
@@ -74,11 +75,11 @@ const ProfileComponent = () => {
 
   useEffect(() => {
     // Adjust percentages based on the event lengths
-    const total = avenirLength + passeesLength; // Adjust if necessary for your logic
+    const total = avenirLength + passeesLength;
     if (total > 0) {
       setAvenirPercentage(Math.max(3 + (100 * avenirLength) / total) / 2);
       setPasseesPercentage(Math.max(3 + (100 * passeesLength) / total) / 2);
-      setEvenementsPercentage(53); // Adjust this calculation as needed
+      setEvenementsPercentage(53);
     } else {
       setAvenirPercentage(3);
       setPasseesPercentage(3);
@@ -89,13 +90,12 @@ const ProfileComponent = () => {
   const {fulltName, email} = useUserDetails();
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    <ScrollView
+      contentContainerStyle={styles.scrollViewContent}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image
-            source={require('../../assets/images/user.png')}
-            style={styles.image}
-          />
+          <Image source={userIcon} style={styles.image} />
         </View>
         <LabelValueComponent
           label="Nom complet:"

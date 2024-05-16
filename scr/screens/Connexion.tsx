@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet, StatusBar} from 'react-native';
 import ConnexionComponent from '../components/screens/ConnexionComponent';
-import {loginUser} from '../components/Api/Login-out';
+import {loginUser} from '../services/Api/Login-out';
 import {useNavigation} from '@react-navigation/native';
 import {MMKV} from 'react-native-mmkv';
 import globalStyle from '../assets/styles/globalStyle';
-import {useEvent} from '../components/context/EventContext';
-import {AuthContext} from '../components/context/AuthContext';
+import {useEvent} from '../context/EventContext';
+import {AuthContext} from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import FailComponent from '../components/elements/notifications/FailComponent';
 

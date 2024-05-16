@@ -7,9 +7,9 @@
 
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import AppNavigator from './scr/components/NavigationComponent';
-import {EventProvider} from './scr/components/context/EventContext';
-import {AuthProvider} from './scr/components/context/AuthContext';
+import AppNavigator from './scr/navigation/NavigationComponent';
+import {EventProvider} from './scr/context/EventContext';
+import {AuthProvider} from './scr/context/AuthContext';
 
 function App() {
   return (

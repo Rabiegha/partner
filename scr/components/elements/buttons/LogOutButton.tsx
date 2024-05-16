@@ -3,14 +3,14 @@ import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Dimensions} from 'react-native';
 import colors from '../../../../colors/colors';
 import {Image} from 'react-native';
+import logOutIcon from '../../../assets/images/icons/Log-out.png';
 
 const LogOutButton = ({onPress}) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <Image
-        source={require('../../../assets/images/icons/Log-out.png')}
+        source={logOutIcon}
         resizeMode="contain"
-        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           width: 17,
           height: 17,

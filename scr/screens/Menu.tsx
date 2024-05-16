@@ -3,12 +3,12 @@ import React, {useContext, useEffect} from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 import colors from '../../colors/colors';
 import LogOutButton from '../components/elements/buttons/LogOutButton';
-import {logoutUser} from '../components/Api/Login-out';
+import {logoutUser} from '../services/Api/Login-out';
 import {useFocusEffect} from '@react-navigation/native';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
 import globalStyle from '../assets/styles/globalStyle';
-import MenuListComponent from '../components/screens/menu/MenuListComponent';
-import {AuthContext} from '../components/context/AuthContext';
+import MenuListComponent from '../components/screens/MenuListComponent';
+import {AuthContext} from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const MenuScreen = ({navigation}) => {

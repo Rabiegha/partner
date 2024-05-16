@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, TextInput, StyleSheet, Dimensions, Image} from 'react-native';
 import colors from '../../../colors/colors';
+import RechercherIcon from '../../assets/images/icons/Rechercher.png';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -9,7 +10,7 @@ const Search = ({ onChange, value }) => {
     <View style={styles.searchBarContainer}>
       <View style={styles.iconContainer}>
         <Image
-          source={require('../../assets/images/icons/Rechercher.png')}
+          source={RechercherIcon}
           resizeMode="contain"
           style={{
             width: 23,
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   iconContainer: {
-    marginRight: 10, // Adjust the margin as needed
+    marginRight: 10,
   },
 });
 
