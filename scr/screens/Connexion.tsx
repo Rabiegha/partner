@@ -1,46 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet, StatusBar} from 'react-native';
 import ConnexionComponent from '../components/screens/ConnexionComponent';
-import {loginUser} from '../services/Api/Login-out';
 import {useNavigation} from '@react-navigation/native';
-import {MMKV} from 'react-native-mmkv';
 import globalStyle from '../assets/styles/globalStyle';
-import {useEvent} from '../context/EventContext';
 import {AuthContext} from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import FailComponent from '../components/elements/notifications/FailComponent';
 
-const storage = new MMKV();
-
 const ConnexionScreen = () => {
-  const navigation = useNavigation();
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
   const {isLoading, login, fail, resetFail} = useContext(AuthContext);
-  /* const handleLogin = async () => {
-    try {
-      const loginResult = await loginUser(userName, password);
-      if (loginResult) {
-        loginUser(userName, password, login);
-        // Gérer la réussite de la connexion
-        console.log('Connexion réussie');
-      } else {
-        // Gérer l'échec de la connexion
-        console.log('Échec de la connexion');
-      }
-    } catch (error) {
-      // Gérer l'erreur de connexion
-      console.error('Erreur lors de la tentative de connexion:', error);
-    }
-
-    const {login} = useEvent();
-    login(true);
-  }; */
   useEffect(() => {
-    // Set the status bar style to light-content when MenuScreen component mounts
     StatusBar.setBarStyle('dark-content');
-    // Cleanup function
     return () => {
       // Reset the status bar style when MenuScreen component unmounts
       StatusBar.setBarStyle('default');

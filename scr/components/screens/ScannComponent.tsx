@@ -34,7 +34,7 @@ const ScannerComponent = () => {
         name: data,
       };
 
-      // URL de votre API pour enregistrer les participants
+      // URL de l'API pour enregistrer les participants en scannant le code QR
       const apiUrl = `${BASE_URL}/ajax_join_attendee/?event_id=${payload.event_id}&content=${data}`;
 
       axios

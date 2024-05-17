@@ -36,6 +36,7 @@ const EventPasseesScreen = ({searchQuery, onEventSelect}) => {
     const getEventDetails = async () => {
       setIsLoading(true); // Commencer le chargement
       try {
+        // URL de l'API pour afficher les evenement passés
         const url = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=0`;
         const response = await axios.get(url);
         if (

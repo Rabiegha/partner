@@ -6,8 +6,6 @@ import colors from '../../../colors/colors';
 import globalStyle from '../../assets/styles/globalStyle';
 import FiltreDetailsComponent from './FiltreDetailsComponent';
 import RedBorderButton from '../elements/buttons/RedBorderButton';
-import LargeButton from '../elements/buttons/LargeButton';
-import AppliquerButton from '../elements/buttons/AppliquerButton';
 
 const FiltreComponent = ({
   handlePress,
@@ -17,7 +15,7 @@ const FiltreComponent = ({
   checkedIn,
   notChechkedIn,
 }) => {
-  const sections = [
+  /* const sections = [
     {
       title: 'Etats',
       buttons: [
@@ -26,14 +24,7 @@ const FiltreComponent = ({
         {title: 'Not checked-in'},
       ],
     },
-    // Add more sections as needed
-  ];
-  const applyFilter = () => {
-    // Assuming you have logic here to determine the new filter criteria
-    const newCriteria = {...filterCriteria}; // Modify as necessary based on the selected filter
-    setFilterCriteria(newCriteria);
-    handlePress(); // Close the modal
-  };
+  ]; */
 
   return (
     <View style={globalStyle.backgroundBlack}>
@@ -59,12 +50,5 @@ const FiltreComponent = ({
     </View>
   );
 };
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-});
 
 export default FiltreComponent;

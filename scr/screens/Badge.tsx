@@ -9,6 +9,7 @@ import BadgeComponent from '../components/screens/BadgeComponent';
 import colors from '../../colors/colors';
 import globalStyle from '../assets/styles/globalStyle';
 import { useEvent } from '../context/EventContext';
+import { EMS_URL } from '../config/config';
 
 const BadgeScreen = ({route, navigation}) => {
   const {triggerListRefresh} = useEvent();
@@ -21,7 +22,7 @@ const BadgeScreen = ({route, navigation}) => {
     navigation.goBack();
   };
 
-  const image = `https://ems.choyou.fr/uploads/badges/${eventId}/${attendeeId}.jpg`;
+  const image = `${EMS_URL}/uploads/badges/${eventId}/${attendeeId}.jpg`;
 
   const pdf = `https://ems.choyou.fr/uploads/badges/${eventId}/pdf/${attendeeId}.pdf`;
   const sendPdf = async () => {
@@ -36,7 +37,7 @@ const BadgeScreen = ({route, navigation}) => {
     }
   };
   const printPdf = async () => {
-    const pdfUrl = `https://ems.choyou.fr/uploads/badges/${eventId}/pdf/${attendeeId}.pdf`;
+    const pdfUrl = `${EMS_URL}/uploads/badges/${eventId}/pdf/${attendeeId}.pdf`;
     try {
       await RNPrint.print({filePath: pdfUrl});
     } catch (error) {
@@ -45,7 +46,7 @@ const BadgeScreen = ({route, navigation}) => {
   };
   const downloadPdf = async () => {
     // Define the URL of the PDF
-    const pdfUrl = `https://ems.choyou.fr/uploads/badges/${eventId}/pdf/${attendeeId}.pdf`;
+    const pdfUrl = `${EMS_URL}/uploads/badges/${eventId}/pdf/${attendeeId}.pdf`;
     // Define the local file path where the PDF should be saved
     let dirs = RNFetchBlob.fs.dirs;
     const filePath = `${dirs.DownloadDir}/${firstName}_${lastName}_${attendeeId}.pdf`;

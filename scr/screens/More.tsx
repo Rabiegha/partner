@@ -7,7 +7,7 @@ import Share from 'react-native-share';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
 import MoreComponent from '../components/screens/MoreComponent';
 import globalStyle from '../assets/styles/globalStyle';
-import { BASE_URL } from '../config/config';
+import {BASE_URL, EMS_URL} from '../config/config';
 
 const MoreScreen = ({route, navigation}) => {
   const {triggerListRefresh} = useEvent();
@@ -28,22 +28,21 @@ const MoreScreen = ({route, navigation}) => {
 
   const {itemName} = route.params || {};
   const handleBackPress = () => {
-    // Define what happens when back is pressed. For example:
-    navigation.goBack(); // This uses React Navigation's goBack function
+    navigation.goBack();
   };
   const handleBadgePress = () => {
-    // Define what happens when back is pressed. For example:
     navigation.navigate('Badge', {
       attendeeId: attendeeId,
       eventId: eventId,
     });
   };
-
   const handleButton = async () => {
+    console.log('handleButton appelé');
     // Calcul de `updatedStatus` basé sur `localAttendeeStatus` au lieu de `attendeeStatus`
-    const updatedStatus = localAttendeeStatus === 1 ? 0 : 1;
+    const updatedStatus = localAttendeeStatus === 0 ? 1 : 0;
+    console.log(`Mise à jour du status : ${updatedStatus}`);
 
-    // Mise à jour de l'URL pour utiliser `updatedStatus`
+    // URL de l'API pour switcher le status
     const url = `${BASE_URL}/update_event_attendee_attendee_status/?event_id=${eventId}&attendee_id=${attendeeId}&attendee_status=${updatedStatus}`;
 
     triggerListRefresh();
@@ -67,7 +66,7 @@ const MoreScreen = ({route, navigation}) => {
     }
   };
 
-  const pdf = `https://ems.choyou.fr/uploads/badges/${eventId}/pdf/${attendeeId}.pdf`;
+  const pdf = `${EMS_URL}/uploads/badges/${eventId}/pdf/${attendeeId}.pdf`;
   const sendPdf = async () => {
     try {
       const shareResponse = await Share.open({

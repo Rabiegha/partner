@@ -47,6 +47,8 @@ const ProfileComponent = () => {
   useEffect(() => {
     const getEventDetails = async () => {
       setIsLoading(true);
+      // URL de l'API pour afficher les evenements
+      // Celui la sert a trouver le nombre des evenement
       const url = `${BASE_URL}/ajax_get_event_details/?user_id=${user_id}&is_event_from=2`;
       const url1 = `${BASE_URL}/ajax_get_event_details/?user_id=${user_id}&is_event_from=1`;
       const url2 = `${BASE_URL}/ajax_get_event_details/?user_id=${user_id}&is_event_from=0`;

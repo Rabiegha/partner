@@ -22,7 +22,7 @@ export const AuthProvider = ({children}) => {
     const encUserName = encodeURIComponent(encodeBase64(email));
     const encPassword = encodeURIComponent(encodeBase64(password));
     setIsLoading(true);
-
+    // URL de l'API pour se connecter
     const url = `${BASE_URL}/ajax_user_login/?enc_email=${encUserName}&enc_password=${encPassword}`;
 
     try {
@@ -77,6 +77,7 @@ export const AuthProvider = ({children}) => {
       }
 
       const response = await axios.post(
+        // URL de l'API pour se deconnecter
         `${BASE_URL}/ajax_user_logout/?current_user_login_details_id=${currentUserId}`,
       );
       console.log(response.data);

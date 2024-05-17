@@ -64,9 +64,9 @@ const AddAttendeesComponent = ({onPress}) => {
     };
 
     try {
+      // URL de l'API pour ajouter un participants
       const url = `${BASE_URL}/add_attendee/?ems_secret_code=${attendeeData.ems_secret_code}&salutation=${attendeeData.salutation}&first_name=${attendeeData.first_name}&last_name=${attendeeData.last_name}&email=${attendeeData.email}&phone=33${attendeeData.phone}&organization=${attendeeData.organization}&designation=88&status_id=${attendeeData.status_id}&attendee_status=${attendeeData.attendee_status}`;
 
-      //GET request with Axios to the constructed URL
       const response = await axios.post(url);
 
       if (response.data.status) {

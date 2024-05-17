@@ -35,6 +35,7 @@ const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
   useEffect(() => {
     const getEventDetails = async () => {
       try {
+        // URL de l'API pour afficher les evenemet a venir + aujourd'hui
         const url = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=2`;
         const url1 = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=1`;
 

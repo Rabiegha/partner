@@ -13,6 +13,7 @@ import colors from '../../../../colors/colors';
 import {BASE_URL} from '../../../config/config';
 import useUserId from '../../../hooks/useUserId';
 import emptyIcon from '../../../assets/images/empty.gif';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
   const [filteredData, setFilteredData] = useState([]);
@@ -35,6 +36,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
     const fetchAllEventAttendeeDetails = async () => {
       setIsLoading(true);
       try {
+        // URL de l'API pour afficher la liste des participants
         const url = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
         const url1 = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
         const response = await axios.get(url);
@@ -92,9 +94,8 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
         setIsLoading(false);
       }
     };
-
     fetchAllEventAttendeeDetails();
-  }, [eventId, searchQuery, refreshList, filterCriteria]); // Assurez-vous d'inclure filterCriteria dans le tableau des dépendances
+  }, [eventId, searchQuery, refreshList, filterCriteria]);
 
   useEffect(() => {
     // Update progress only after fetching and state updates to avoid premature calculation

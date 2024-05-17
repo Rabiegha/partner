@@ -7,21 +7,14 @@ import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
 import colors from '../../colors/colors';
 import Search from '../components/elements/Search';
 import {useNavigation} from '@react-navigation/native';
-/* import FiltreComponent from '../components/event/filtre/FiltreComponent'; */
 import HeaderEvent from '../components/elements/header/HeaderEvent';
-
-import {logoutUser} from '../services/Api/Login-out';
-import {MMKV} from 'react-native-mmkv';
 import globalStyle from '../assets/styles/globalStyle';
 import {useEvent} from '../context/EventContext';
 import {AuthContext} from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const storage = new MMKV();
-
 const Tab = createMaterialTopTabNavigator();
 
-// Créez une fonction pour votre navigation d'onglets
 function MyTabs({searchQuery, onEventSelect}) {
   return (
     <Tab.Navigator
@@ -62,10 +55,9 @@ function MyTabs({searchQuery, onEventSelect}) {
 const EventsScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('dark-content'); // Use 'light-content' if you prefer the light mode
+      StatusBar.setBarStyle('dark-content');
       return () => {
-        // Optionally reset StatusBar style when leaving screen
-        StatusBar.setBarStyle('dark-content'); // Adjust according to your app's needs
+        StatusBar.setBarStyle('dark-content');
       };
     }, []),
   );
@@ -75,19 +67,19 @@ const EventsScreen = () => {
     setModalVisible(true);
     // Animate the modal to slide in from the left
     Animated.timing(modalAnimation, {
-      toValue: 0, // End position of the modal
-      duration: 300, // Animation duration
-      useNativeDriver: true, // Use native driver for better performance
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
     }).start();
   };
 
   const closeModal = () => {
     // Animate the modal to slide out to the left
     Animated.timing(modalAnimation, {
-      toValue: -300, // Move back to the initial off-screen position
+      toValue: -300,
       duration: 300,
       useNativeDriver: true,
-    }).start(() => setModalVisible(false)); // Hide the modal after the animation
+    }).start(() => setModalVisible(false));
   };
 
   const [searchQuery, setSearchQuery] = useState('');

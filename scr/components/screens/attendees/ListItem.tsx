@@ -28,7 +28,7 @@ const ListItem = React.memo(({item, searchQuery}) => {
     };
     console.log(payload.attendee_status);
 
-    // API endpoint for updating attendee status
+    // API endpoint pour chngerle status
     const url = `${BASE_URL}/update_event_attendee_attendee_status/?event_id=${payload.event_id}&attendee_id=${payload.attendee_id}&attendee_status=${payload.attendee_status}`;
 
     try {
