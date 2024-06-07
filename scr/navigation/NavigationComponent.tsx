@@ -295,7 +295,7 @@ function TabNavigator() {
   );
 }
 function AppNavigator() {
-  const {userStatus} = useContext(AuthContext);
+  const {userStatus, isDemoMode} = useContext(AuthContext);
   console.log('rrrr', userStatus);
   const userStatus1 = storage.getString('user_id');
   console.log('rrrr', userStatus1);
@@ -303,7 +303,7 @@ function AppNavigator() {
   return (
     <EventProvider>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {userStatus1 ? (
+        {userStatus1 || isDemoMode ? (
           <Stack.Screen name="Events" component={EventsScreen} />
         ) : (
           <Stack.Screen name="Connexion" component={ConnexionScreen} />

@@ -17,6 +17,7 @@ export const AuthProvider = ({children}) => {
   const [currentUserId, setCurrentUserId] = useState(
     storage.getString('current_user_login_details_id'),
   );
+  const [isDemoMode, setIsDemoMode] = useState(false); // Ajout de l'état pour le mode démo
 
   const login = async (email, password) => {
     const encUserName = encodeURIComponent(encodeBase64(email));
@@ -71,6 +72,14 @@ export const AuthProvider = ({children}) => {
   const logout = async () => {
     setIsLoading(true);
     try {
+      if (isDemoMode) {
+        // Si le mode démo est activé, simplement désactiver le mode démo et naviguer vers la connexion
+        setIsDemoMode(false);
+        setUserStatus(false);
+        setUserInfo({});
+        setIsLoading(false);
+        return;
+      }
       if (!currentUserId) {
         console.log('Aucun utilisateur connecté trouvé.');
         return;
@@ -104,7 +113,17 @@ export const AuthProvider = ({children}) => {
 
   return (
     <AuthContext.Provider
-      value={{login, userInfo, isLoading, userStatus, logout, fail, resetFail}}>
+      value={{
+        login,
+        userInfo,
+        isLoading,
+        userStatus,
+        logout,
+        fail,
+        resetFail,
+        isDemoMode,
+        setIsDemoMode,
+      }}>
       {children}
     </AuthContext.Provider>
   );

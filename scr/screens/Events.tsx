@@ -99,9 +99,14 @@ const EventsScreen = () => {
     navigation.navigate('Tabs', {screen: 'Attendees'});
   };
 
-  const {isLoading, logout} = useContext(AuthContext);
+  const {isLoading, logout, isDemoMode} = useContext(AuthContext);
   const handleGoBack = () => {
-    logout();
+    if (isDemoMode) {
+      logout(); // Déconnecter et désactiver le mode démo
+    } else {
+      logout(); // Déconnecter normalement
+    }
+    navigation.navigate('Connexion'); // Naviguer vers l'écran de connexion
   };
 
   const [opacity, setOpacity] = useState(0);

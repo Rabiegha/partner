@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   FlatList,
@@ -6,23 +6,30 @@ import {
   StatusBar,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import axios from 'axios';
 import ListEvents from '../components/screens/events/ListEvents';
 import {useEvent} from '../context/EventContext';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import colors from '../../colors/colors';
 import globalStyle from '../assets/styles/globalStyle';
 import {BASE_URL} from '../config/config';
 import useUserId from '../hooks/useUserId';
 import empty from '../assets/images/empty.gif';
+import {AuthContext} from '../context/AuthContext';
+import {demoEvents} from '../demo/demoEvents';
 
 const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
   const [userId, setUserId] = useUserId();
   const [hasData, setHasData] = useState(false);
   const [eventDetails, setEventDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const {updateStatsAvenir} = useEvent();
+  const {isDemoMode} = useContext(AuthContext);
+
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('dark-content');
@@ -34,8 +41,19 @@ const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
 
   useEffect(() => {
     const getEventDetails = async () => {
+      if (isDemoMode) {
+        // Si le mode démo est activé, utiliser les données factices
+        setEventDetails(demoEvents);
+        setHasData(demoEvents.length > 0);
+        setIsLoading(false);
+        updateStatsAvenir({
+          newTotaleAvenir: demoEvents.length,
+        });
+        return;
+      }
+
       try {
-        // URL de l'API pour afficher les evenemet a venir + aujourd'hui
+        // URL de l'API pour afficher les événements à venir + aujourd'hui
         const url = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=2`;
         const url1 = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=1`;
 
@@ -87,14 +105,23 @@ const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
     };
 
     getEventDetails();
-  }, []);
+  }, [isDemoMode]); // Recharger les données si le mode démo change
 
   const filteredEvents = eventDetails.filter(event =>
     event.event_name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
   const handleSelectEvent = event => {
+    setSelectedEvent(event); // Mettre à jour l'événement sélectionné
     onEventSelect(event); // Utiliser le callback pour passer les données de l'événement
   };
+
+  const renderParticipant = ({ item }) => (
+    <View style={styles.participantItem}>
+      <Text style={styles.participantName}>{item.name}</Text>
+      <Text>{item.email}</Text>
+    </View>
+  );
 
   return (
     <View style={[styles.container, globalStyle.backgroundWhite]}>
@@ -105,23 +132,37 @@ const EventAvenirScreen = ({searchQuery, onEventSelect}) => {
           style={styles.loadingIndicator}
         />
       ) : hasData ? (
-        <FlatList
-          data={filteredEvents}
-          keyExtractor={item => item.event_id.toString()}
-          renderItem={({item}) => (
-            <ListEvents
-              eventData={{
-                event_name: item.event_name,
-                ems_secret_code: item.ems_secret_code.toString(),
-                event_id: item.event_id,
-              }}
-              searchQuery={searchQuery}
-              onPress={handleSelectEvent}
-              eventDate={item.nice_start_datetime}
-              eventType={item.event_type_name}
+        selectedEvent ? (
+          <View style={styles.participantsContainer}>
+            <TouchableOpacity onPress={() => setSelectedEvent(null)}>
+              <Text style={styles.backButton}>Retour aux événements</Text>
+            </TouchableOpacity>
+            <Text style={styles.eventTitle}>{selectedEvent.event_name}</Text>
+            <FlatList
+              data={selectedEvent.participants}
+              keyExtractor={(item) => item.participant_id.toString()}
+              renderItem={renderParticipant}
             />
-          )}
-        />
+          </View>
+        ) : (
+          <FlatList
+            data={filteredEvents}
+            keyExtractor={item => item.event_id.toString()}
+            renderItem={({item}) => (
+              <ListEvents
+                eventData={{
+                  event_name: item.event_name,
+                  ems_secret_code: item.ems_secret_code.toString(),
+                  event_id: item.event_id,
+                }}
+                searchQuery={searchQuery}
+                onPress={() => handleSelectEvent(item)}
+                eventDate={item.nice_start_datetime}
+                eventType={item.event_type_name}
+              />
+            )}
+          />
+        )
       ) : (
         <View style={styles.noDataView}>
           <Image source={empty} style={styles.gifStyle} />
@@ -135,6 +176,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
     paddingHorizontal: 2,
+    flex: 1,
   },
   noDataView: {
     flex: 1,
@@ -149,6 +191,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  participantsContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  backButton: {
+    color: colors.blue,
+    marginBottom: 10,
+  },
+  eventTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  participantItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  participantName: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

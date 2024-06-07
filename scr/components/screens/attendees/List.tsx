@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -13,10 +13,13 @@ import colors from '../../../../colors/colors';
 import {BASE_URL} from '../../../config/config';
 import useUserId from '../../../hooks/useUserId';
 import emptyIcon from '../../../assets/images/empty.gif';
+import { Attendee } from "../../../interfaces/interfaces.tsx";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {demoEvents} from '../../../demo/demoEvents'
+import { AuthContext } from '../../../context/AuthContext.tsx';
 
 const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState<Attendee[]>([]);
   const flatListRef = useRef(null);
   const [totalAttendees, setTotalAttendees] = useState(0);
   const [totalCheckedAttendees, setTotalCheckedAttendees] = useState(0);
@@ -26,6 +29,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
   const [hasData, setHasData] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useUserId();
+  const {isDemoMode} = useContext(AuthContext); 
 
   // Callback function to handle switch toggle in ListItem
   const handleSwitchToggle = () => {
@@ -36,15 +40,51 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
     const fetchAllEventAttendeeDetails = async () => {
       setIsLoading(true);
       try {
+        if (isDemoMode) {
+          // Si le mode démo est activé, utiliser les données factices
+          const selectedEvent = demoEvents.find(event => event.event_id === eventId);
+          if (selectedEvent) {
+            let attendees = selectedEvent.participants;
+
+            // Appliquez les filtres basés sur filterCriteria ici
+            if (filterCriteria) {
+              if (filterCriteria.status === 'checked-in') {
+                attendees = attendees.filter(attendee => attendee.attendee_status == 1);
+              } else if (filterCriteria.status === 'not-checked-in') {
+                attendees = attendees.filter(attendee => attendee.attendee_status == 0);
+              }
+            }
+
+            // Triez les participants pour que ceux avec attendee_status = 1 soient en haut
+            attendees.sort((a, b) => b.attendee_status - a.attendee_status);
+
+            // Filtrez davantage par searchQuery si fourni
+            attendees = attendees.filter(attendee =>
+              `${attendee.first_name} ${attendee.last_name}`
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()),
+            );
+
+            setFilteredData(attendees);
+            setTotalAttendees(attendees.length);
+            setTotalCheckedAttendees(
+              attendees.filter(a => a.attendee_status == 1).length,
+            );
+            setHasData(attendees.length > 0);
+          } else {
+            setHasData(false);
+          }
+          setIsLoading(false);
+          return;
+        }
         // URL de l'API pour afficher la liste des participants
         const url = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
         const url1 = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
         const response = await axios.get(url);
         const response1 = await axios.get(url1);
-
         if (response.data.status) {
-          let attendees = response.data.event_attendee_details;
-          let attendees1 = response1.data.event_attendee_details;
+          let attendees: Attendee[] = response.data.event_attendee_details;
+          let attendees1: Attendee[] = response1.data.event_attendee_details;
 
           // Appliquez les filtres basés sur filterCriteria ici
           if (filterCriteria) {
@@ -138,7 +178,7 @@ const styles = StyleSheet.create({
     height: 600,
   },
   contentContainer: {
-    paddingBottom: 200, // Adjust this value based on the height of your bottom tab bar
+    paddingBottom: 200,
   },
   gifStyle: {
     height: 300,
