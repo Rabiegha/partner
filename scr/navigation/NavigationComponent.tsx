@@ -296,9 +296,9 @@ function TabNavigator() {
 }
 function AppNavigator() {
   const {userStatus, isDemoMode} = useContext(AuthContext);
-  console.log('rrrr', userStatus);
+  //console.log('rrrr', userStatus);
   const userStatus1 = storage.getString('user_id');
-  console.log('rrrr', userStatus1);
+  //console.log('rrrr', userStatus1);
 
   return (
     <EventProvider>

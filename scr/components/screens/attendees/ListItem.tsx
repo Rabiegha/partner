@@ -2,17 +2,15 @@ import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../colors/colors';
+import CustomSwitch from '../../elements/Switch';
 import axios from 'axios';
 import {useEvent} from '../../../context/EventContext';
-import CustomSwitch from '../../elements/Switch';
 import { BASE_URL } from '../../../config/config';
 
-const ListItem = React.memo(({item, searchQuery}) => {
+const ListItem = React.memo(({item, searchQuery, onUpdateAttendee}) => {
   const navigation = useNavigation();
   const {triggerListRefresh} = useEvent();
 
-  // Convert attendee_status to boolean for the initial state of the switch
-  // Assuming attendee_status is 1 for "on" and 0 for "off"
   const initialSwitchState = item.attendee_status == 1;
   const [isSwitchOn, setIsSwitchOn] = React.useState(initialSwitchState);
 
@@ -20,38 +18,17 @@ const ListItem = React.memo(({item, searchQuery}) => {
     setIsSwitchOn(newValue);
     const newAttendeeStatus = newValue ? 1 : 0;
 
-    // Construct the payload for the API call
-    const payload = {
-      event_id: item.event_id,
-      attendee_id: item.id,
+    const updatedAttendee = {
+      ...item,
       attendee_status: newAttendeeStatus,
     };
-    console.log(payload.attendee_status);
-
-    // API endpoint pour chngerle status
-    const url = `${BASE_URL}/update_event_attendee_attendee_status/?event_id=${payload.event_id}&attendee_id=${payload.attendee_id}&attendee_status=${payload.attendee_status}`;
 
     try {
-      // Example of a POST request to update the attendee status
-      // You might need to adjust headers or the request format based on your API's specifications
-      const response = await axios.post(url);
-
-      // Check if the update was successful
-      if (response.data.status) {
-        console.log(
-          'Attendee status updated successfully:',
-          response.data.message,
-        );
-      } else {
-        console.error(
-          'Failed to update attendee status:',
-          response.data.message,
-        );
-      }
+      await onUpdateAttendee(updatedAttendee); // Call the update function passed from List
+      triggerListRefresh(); // Refresh the list after updating
     } catch (error) {
       console.error('Error updating attendee status:', error);
     }
-    triggerListRefresh();
   };
 
   const highlightSearch = (text, query) => {

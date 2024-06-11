@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, StyleSheet, View, Image} from 'react-native';
+import {ScrollView, StyleSheet, View, Image, Text} from 'react-native';
 import LabelValueComponent from '../elements/LabelValueComponent';
 import LargeButton from '../elements/buttons/LargeButton';
 import colors from '../../../colors/colors';
@@ -7,7 +7,7 @@ import SmallButton from '../elements/buttons/SmallButton';
 import userIcon from '../../assets/images/user.png';
 import ScanIcon from '../../assets/images/icons/Scan.png';
 import SuppIcon from '../../assets/images/icons/Supp.png';
-
+import HoldButton from '../elements/buttons/HoldButton';
 
 const MoreComponent = ({
   firstName,
@@ -19,8 +19,9 @@ const MoreComponent = ({
   See,
   handleButton,
   Share,
+  loading,
 }) => {
-  console.log(firstName, lastName, email);
+  console.log('Current attendeeStatus:', attendeeStatus);
 
   function insertSpaceBetweenPairs(str) {
     if (str == null) {
@@ -47,15 +48,14 @@ const MoreComponent = ({
     }
   }
 
+  const parsedAttendeeStatus = Number(attendeeStatus);
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}>
       <View style={styles.imageContainer}>
-        <Image
-          source={userIcon}
-          style={styles.image}
-        />
+        <Image source={userIcon} style={styles.image} />
       </View>
       <View style={styles.topButtonsContainer}>
         <SmallButton
@@ -74,34 +74,31 @@ const MoreComponent = ({
       <LabelValueComponent
         label="Nom:"
         value={firstName && lastName ? `${firstName} ${lastName}` : '- '}
-        value2={undefined}
       />
-      <LabelValueComponent
-        label="Adresse mail:"
-        value={email ? email : '-'}
-        value2={undefined}
-      />
+      <LabelValueComponent label="Adresse mail:" value={email ? email : '-'} />
       <LabelValueComponent
         label="Téléphone:"
         value={phone ? insertSpaceBetweenPairs(phone) : '-'}
-        value2={undefined}
       />
       <LabelValueComponent
         label="Entreprise:"
         value={organization ? organization : '-'}
-        value2={undefined}
       />
-      {attendeeStatus == 0 ? (
+{/*       <Text>Status: {attendeeStatus}</Text> */}
+      {parsedAttendeeStatus === 0 ? (
         <LargeButton
           title="Check-in"
           onPress={() => handleButton(1)}
           backgroundColor={colors.green}
+          loading={loading} // Pass loading prop
         />
       ) : (
-        <LargeButton
+        <HoldButton
           title="Undo Check-in"
           onPress={() => handleButton(0)}
           backgroundColor={colors.red}
+          holdDuration={1000} // Duration to hold the button for 3 seconds
+          loading={loading} // Pass loading prop
         />
       )}
     </ScrollView>
@@ -121,10 +118,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 40,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
   },
   topButtonsContainer: {
     flexDirection: 'row',

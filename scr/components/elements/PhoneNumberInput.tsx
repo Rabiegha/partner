@@ -50,7 +50,6 @@ const PhoneInput = ({phoneNumber, onChangeText}) => {
   }, []);
   useEffect(() => {
     // Opérations à exécuter suite à la mise à jour de selectedArea
-    console.log('Nouvelle zone sélectionnée:', selectedArea);
   }, [selectedArea]);
 
   // Render countries codes modal

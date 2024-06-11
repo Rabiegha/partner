@@ -41,7 +41,6 @@ const AddAttendeesComponent = ({onPress}) => {
   };
   const {secretCode} = useEvent();
   const {triggerListRefresh} = useEvent();
-  console.log(secretCode);
 
   const handleEnregistrer = async () => {
     // Logique pour traiter les données du formulaire
@@ -95,7 +94,6 @@ const AddAttendeesComponent = ({onPress}) => {
     // Toggle between 1 and 2 for CheckedIn
     const newCheckedIn = CheckedIn == 1 ? 0 : 1;
     setCheckedIn(newCheckedIn);
-    console.log(newCheckedIn);
   };
   return (
     <View
@@ -155,23 +153,23 @@ const AddAttendeesComponent = ({onPress}) => {
           title={'Check-in'}
           checkedIcon={
             <Image
-              source={Checked}
-              resizeMode="contain"
-              style={{
-                width: 20,
-                height: 20,
-                tintColor: colors.darkerGrey,
-              }}
-            />
-          }
-          uncheckedIcon={
-            <Image
               source={notChecked}
               resizeMode="contain"
               style={{
                 width: 20,
                 height: 20,
                 tintColor: colors.darkGrey,
+              }}
+            />
+          }
+          uncheckedIcon={
+            <Image
+              source={Checked}
+              resizeMode="contain"
+              style={{
+                width: 20,
+                height: 20,
+                tintColor: colors.darkerGrey,
               }}
             />
           }
