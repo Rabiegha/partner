@@ -30,6 +30,7 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const {updateStatsAvenir} = useEvent();
   const {isDemoMode} = useContext(AuthContext);
+  console.log(isDemoMode);
 
   const expirationTimeInMillis = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 
@@ -78,9 +79,10 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
       let events = await getData('events', expirationTimeInMillis);
       if (!events) {
         if (isDemoMode) {
+          await AsyncStorage.clear();
           // Si le mode démo est activé, utiliser les données factices
-          events = demoEvents;
           await storeData('events', events);
+          events = demoEvents;
           setEventDetails(events);
           setHasData(events.length > 0);
           setIsLoading(false);

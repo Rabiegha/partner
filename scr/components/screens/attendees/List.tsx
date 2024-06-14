@@ -32,6 +32,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useUserId();
   const {isDemoMode} = useContext(AuthContext);
+  console.log(isDemoMode);
 
   const expirationTimeInMillis = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 
