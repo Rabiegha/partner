@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext,useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -19,20 +19,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {demoEvents} from '../../../demo/demoEvents';
 import {AuthContext} from '../../../context/AuthContext.tsx';
 
+import {useFocusEffect} from '@react-navigation/native';
+
 const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
   const [filteredData, setFilteredData] = useState<Attendee[]>([]);
   const [allAttendees, setAllAttendees] = useState<Attendee[]>([]);
   const flatListRef = useRef(null);
   const [totalAttendees, setTotalAttendees] = useState(0);
   const [totalCheckedAttendees, setTotalCheckedAttendees] = useState(0);
-  const {refreshList, triggerListRefresh, updateAttendee, attendeesRefreshKey} = useEvent();
+  const {refreshList, triggerListRefresh, updateAttendee, attendeesRefreshKey} =
+    useEvent();
   const {eventId} = useEvent();
-  console.log('eventId', eventId);
   const [hasData, setHasData] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useUserId();
   const {isDemoMode} = useContext(AuthContext);
-  console.log(isDemoMode);
+/*   console.log(isDemoMode); */
 
   const expirationTimeInMillis = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 
@@ -151,7 +153,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
 
       setFilteredData(filteredAttendees);
       setHasData(filteredAttendees.length > 0);
-      console.log('Filtered attendees data:', filteredAttendees);
+/*       console.log('Filtered attendees data:', filteredAttendees); */
     } catch (error) {
       console.error('Error fetching attendee details:', error);
       setHasData(false);
@@ -160,14 +162,33 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
     }
   };
 
+  // clearLocalData
+  useFocusEffect(
+    useCallback(() => {
+      clearLocalData();
+
+      return () => {
+        // Any cleanup can be done here
+      };
+    }, [eventId])
+  );
+
   useEffect(() => {
     fetchAllEventAttendeeDetails();
-  }, [eventId, searchQuery, refreshList, filterCriteria, isDemoMode, attendeesRefreshKey]);
+  }, [
+    eventId,
+    searchQuery,
+    refreshList,
+    filterCriteria,
+    isDemoMode,
+    attendeesRefreshKey,
+  ]);
 
   useEffect(() => {
     const ratio =
       totalAttendees > 0 ? (totalCheckedAttendees / totalAttendees) * 100 : 0;
     onUpdateProgress(totalAttendees, totalCheckedAttendees, ratio);
+    clearLocalData;
   }, [totalAttendees, totalCheckedAttendees, onUpdateProgress]);
 
   const handleUpdateAttendee = async updatedAttendee => {
@@ -192,7 +213,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
 
   return (
     <View style={styles.list}>
-      <Button title="Clear Local Data" onPress={clearLocalData} />
+{/*       <Button title="Clear Local Data" onPress={clearLocalData} /> */}
       {isLoading ? (
         <ActivityIndicator color={colors.green} size="large" />
       ) : hasData ? (

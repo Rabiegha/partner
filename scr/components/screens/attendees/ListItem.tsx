@@ -63,6 +63,7 @@ const ListItem = React.memo(({item, searchQuery, onUpdateAttendee}) => {
       email: item.email,
       phone: item.phone,
       attendeeStatus: item.attendee_status,
+      jobTitle: item.designation,
       organization: item.organization,
     });
   };

@@ -58,13 +58,13 @@ const ConnexionScreen = () => {
             resetFail();
           }}
         />
-        {/*         <View style={styles.demoModeContainer}>
+        <View style={styles.demoModeContainer}>
           <TouchableOpacity
             onPress={handleDemoLogin}
             style={styles.demoModeButton}>
             <Text style={styles.demoModeText}>Activer le mode démo</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
     </View>
   );

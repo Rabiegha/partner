@@ -16,12 +16,14 @@ const MoreComponent = ({
   phone,
   attendeeStatus,
   organization,
+  JobTitle,
   See,
   handleButton,
   Share,
   loading,
 }) => {
   console.log('Current attendeeStatus:', attendeeStatus);
+  console.log('Current attendeeStatus:', JobTitle);
 
   function insertSpaceBetweenPairs(str) {
     if (str == null) {
@@ -74,6 +76,7 @@ const MoreComponent = ({
       <LabelValueComponent
         label="Nom:"
         value={firstName && lastName ? `${firstName} ${lastName}` : '- '}
+        modifyDisplay="none"
       />
       <LabelValueComponent label="Adresse mail:" value={email ? email : '-'} />
       <LabelValueComponent
@@ -84,7 +87,11 @@ const MoreComponent = ({
         label="Entreprise:"
         value={organization ? organization : '-'}
       />
-{/*       <Text>Status: {attendeeStatus}</Text> */}
+      <LabelValueComponent
+        label="Job Title:"
+        value={JobTitle ? JobTitle : '-'}
+      />
+      {/*<Text>Status: {attendeeStatus}</Text> */}
       {parsedAttendeeStatus === 0 ? (
         <LargeButton
           title="Check-in"
@@ -107,9 +114,8 @@ const MoreComponent = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
-    paddingBottom: 100,
     alignItems: 'center',
+    height: 830,
   },
   imageContainer: {
     marginBottom: 10,
@@ -121,7 +127,7 @@ const styles = StyleSheet.create({
   },
   topButtonsContainer: {
     flexDirection: 'row',
-    marginBottom: 35,
+    marginBottom: 20,
   },
 });
 

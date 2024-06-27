@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {
   View,
   FlatList,
@@ -30,7 +30,6 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const {updateStatsAvenir} = useEvent();
   const {isDemoMode} = useContext(AuthContext);
-  console.log(isDemoMode);
 
   const expirationTimeInMillis = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 
@@ -64,7 +63,27 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
     }
     return null;
   };
+  // Clear local data
 
+  const clearLocalData = async () => {
+    try {
+      await AsyncStorage.clear();
+      console.log('Local data cleared');
+    } catch (e) {
+      console.error('Error clearing local data', e);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      clearLocalData();
+
+      return () => {
+        // Any cleanup can be done here
+      };
+    }, []),
+  );
+  // Clear local data
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('dark-content');
@@ -164,7 +183,7 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
     onEventSelect(event); // Utiliser le callback pour passer les données de l'événement
   };
 
-  const renderParticipant = ({ item }) => (
+  const renderParticipant = ({item}) => (
     <View style={styles.participantItem}>
       <Text style={styles.participantName}>{item.name}</Text>
       <Text>{item.email}</Text>
@@ -180,7 +199,8 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
           style={styles.loadingIndicator}
         />
       ) : hasData ? (
-        selectedEvent ? (
+        //******************* */ A revoir **********************************
+        false ? (
           <View style={styles.participantsContainer}>
             <TouchableOpacity onPress={() => setSelectedEvent(null)}>
               <Text style={styles.backButton}>Retour aux événements</Text>
@@ -188,7 +208,7 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
             <Text style={styles.eventTitle}>{selectedEvent.event_name}</Text>
             <FlatList
               data={selectedEvent.participants}
-              keyExtractor={(item) => item.participant_id.toString()}
+              keyExtractor={item => item.participant_id.toString()}
               renderItem={renderParticipant}
             />
           </View>

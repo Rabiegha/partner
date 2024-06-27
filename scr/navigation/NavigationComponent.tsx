@@ -49,6 +49,7 @@ import Ajouts from '../assets/images/icons/Ajouts.png';
 import Scan from '../assets/images/icons/Scan.png';
 import Profil from '../assets/images/icons/Profil.png';
 import Outils from '../assets/images/icons/Outils.png';
+import WebViewScreen from '../screens/WebView';
 
 const storage = new MMKV();
 const Tab = createBottomTabNavigator();
@@ -321,6 +322,7 @@ function AppNavigator() {
         <Stack.Screen name="More" component={MoreScreen} />
         <Stack.Screen name="Badge" component={BadgeScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
+        <Stack.Screen name="WebView" component={WebViewScreen} />
         <Stack.Screen name="Help" component={HelpScreen} />
         <Stack.Screen name="Avenir" component={EventAvenirScreen} />
         <Stack.Screen name="Passees" component={EventPasseesScreen} />

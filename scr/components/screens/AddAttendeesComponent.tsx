@@ -28,6 +28,7 @@ const AddAttendeesComponent = ({onPress}) => {
   const [email, setEmail] = useState('');
   const [numeroTelephone, setNumeroTelephone] = useState('');
   const [societe, setSociete] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
   const [success, setSuccess] = useState(null);
   const [CheckedIn, setCheckedIn] = useState('1');
   const route = useRoute();
@@ -38,6 +39,7 @@ const AddAttendeesComponent = ({onPress}) => {
     setEmail('');
     setNumeroTelephone('');
     setSociete('');
+    setJobTitle('');
   };
   const {secretCode} = useEvent();
   const {triggerListRefresh} = useEvent();
@@ -57,14 +59,14 @@ const AddAttendeesComponent = ({onPress}) => {
       email: email,
       phone: numeroTelephone,
       organization: societe,
-      designation: '',
+      jobTitle: jobTitle,
       status_id: '2',
       attendee_status: CheckedIn,
     };
 
     try {
       // URL de l'API pour ajouter un participants
-      const url = `${BASE_URL}/add_attendee/?ems_secret_code=${attendeeData.ems_secret_code}&salutation=${attendeeData.salutation}&first_name=${attendeeData.first_name}&last_name=${attendeeData.last_name}&email=${attendeeData.email}&phone=33${attendeeData.phone}&organization=${attendeeData.organization}&designation=88&status_id=${attendeeData.status_id}&attendee_status=${attendeeData.attendee_status}`;
+      const url = `${BASE_URL}/add_attendee/?ems_secret_code=${attendeeData.ems_secret_code}&salutation=${attendeeData.salutation}&first_name=${attendeeData.first_name}&last_name=${attendeeData.last_name}&email=${attendeeData.email}&phone=33${attendeeData.phone}&organization=${attendeeData.organization}&designation=${attendeeData.jobTitle}&attendee_status=${attendeeData.attendee_status}`;
 
       const response = await axios.post(url);
 
@@ -149,6 +151,13 @@ const AddAttendeesComponent = ({onPress}) => {
           value={societe}
           onChangeText={text => setSociete(text)}
         />
+        <TextInput
+          style={globalStyle.input}
+          placeholderTextColor={colors.grey}
+          placeholder="Job Title"
+          value={jobTitle}
+          onChangeText={text => setJobTitle(text)}
+        />
         <CheckBox
           title={'Check-in'}
           checkedIcon={
@@ -189,12 +198,11 @@ const AddAttendeesComponent = ({onPress}) => {
 
 const styles = StyleSheet.create({
   container: {
-    top: 40,
+    top: -20,
     flexGrow: 1,
     padding: 20,
     width: '100%',
-    height: 800,
-    paddingBottom: 120,
+    height: 900,
   },
   wrapper: {
     top: 25,

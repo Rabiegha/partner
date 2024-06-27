@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {
   View,
   FlatList,
@@ -61,6 +61,28 @@ const EventPasseesScreen = ({searchQuery, onEventSelect}) => {
     return null;
   };
 
+  // Clear local data
+
+  const clearLocalData = async () => {
+    try {
+      await AsyncStorage.clear();
+      console.log('Local data cleared');
+    } catch (e) {
+      console.error('Error clearing local data', e);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      clearLocalData();
+
+      return () => {
+        // Any cleanup can be done here
+      };
+    }, []),
+  );
+  // Clear local data
+
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('dark-content');
@@ -90,7 +112,11 @@ const EventPasseesScreen = ({searchQuery, onEventSelect}) => {
             // URL de l'API pour afficher les événements passés
             const url = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=0`;
             const response = await axios.get(url);
-            if (response.data.status && response.data.event_details && response.data.event_details.length > 0) {
+            if (
+              response.data.status &&
+              response.data.event_details &&
+              response.data.event_details.length > 0
+            ) {
               const eventDetailsData = response.data.event_details;
               await storeData('events_passes', eventDetailsData);
               setEventDetails(eventDetailsData);
@@ -101,7 +127,9 @@ const EventPasseesScreen = ({searchQuery, onEventSelect}) => {
                 newTotalePassees: eventDataLength,
               });
             } else {
-              console.error('Failed to fetch event details or no events available');
+              console.error(
+                'Failed to fetch event details or no events available',
+              );
               setEventDetails([]);
               setHasData(false);
             }

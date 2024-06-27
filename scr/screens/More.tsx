@@ -19,7 +19,7 @@ const MoreScreen = ({ route, navigation }) => {
     lastName,
     email,
     phone,
-    organization,
+    jobTitle,
     attendeeStatus,
   } = route.params;
 
@@ -35,7 +35,7 @@ const MoreScreen = ({ route, navigation }) => {
       last_name: lastName,
       email: email,
       phone: phone,
-      organization: organization,
+      jobTitle: jobTitle,
       event_id: eventId,
     };
     updateAttendee(eventId, updatedAttendee);
@@ -104,7 +104,7 @@ const MoreScreen = ({ route, navigation }) => {
           lastName={lastName}
           email={email}
           phone={phone}
-          organization={organization}
+          JobTitle={jobTitle}
           attendeeStatus={localAttendeeStatus}
           handleButton={handleButton}
           Share={sendPdf}

@@ -1,25 +1,25 @@
-import React, { useContext, useState } from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import React, {useContext, useState} from 'react';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import AddAttendeesComponent from '../components/screens/AddAttendeesComponent';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import globalStyle from '../assets/styles/globalStyle';
-import { useEvent } from '../context/EventContext';
+import {useEvent} from '../context/EventContext';
 import axios from 'axios';
-import { BASE_URL } from '../config/config';
+import {BASE_URL} from '../config/config';
 
-const AddAttendeesScreen = ({ navigation }) => {
+const AddAttendeesScreen = ({navigation}) => {
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('dark-content');
       return () => {};
-    }, [])
+    }, []),
   );
 
   const [success, setSuccess] = useState(null);
-  const { secretCode, eventId, addAttendee, triggerListRefresh } = useEvent();
+  const {secretCode, eventId, addAttendee, triggerListRefresh} = useEvent();
 
-  const handleEnregistrer = async (newAttendee) => {
+  const handleEnregistrer = async newAttendee => {
     console.log('New Attendee:', newAttendee);
 
     try {
@@ -38,7 +38,7 @@ const AddAttendeesScreen = ({ navigation }) => {
         console.log('Triggering list refresh...');
         triggerListRefresh();
         console.log('List refresh triggered');
-        
+
         navigation.navigate('Attendees');
       } else {
         setSuccess(false);
@@ -52,7 +52,7 @@ const AddAttendeesScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       return () => setSuccess(null);
-    }, [])
+    }, []),
   );
 
   const handleGoBack = () => {
@@ -68,7 +68,7 @@ const AddAttendeesScreen = ({ navigation }) => {
       />
       <AddAttendeesComponent
         onPress={handleEnregistrer}
-        style={[globalStyle.container, { marginTop: 50 }]}
+        style={[globalStyle.container, {marginTop: 50}]}
       />
     </View>
   );
