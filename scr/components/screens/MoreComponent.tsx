@@ -6,7 +6,7 @@ import colors from '../../../colors/colors';
 import SmallButton from '../elements/buttons/SmallButton';
 import userIcon from '../../assets/images/user.png';
 import ScanIcon from '../../assets/images/icons/Scan.png';
-import SuppIcon from '../../assets/images/icons/Supp.png';
+import EditIcon from '../../assets/images/icons/Modifier.png';
 import HoldButton from '../elements/buttons/HoldButton';
 
 const MoreComponent = ({
@@ -21,6 +21,7 @@ const MoreComponent = ({
   handleButton,
   Share,
   loading,
+  modify
 }) => {
   console.log('Current attendeeStatus:', attendeeStatus);
   console.log('Current attendeeStatus:', JobTitle);
@@ -67,10 +68,10 @@ const MoreComponent = ({
           tintColor={colors.greyCream}
         />
         <SmallButton
-          imageSource={SuppIcon}
-          pressHandler={Share}
-          backgroundColor={colors.red}
-          tintColor="white"
+          imageSource={EditIcon}
+          pressHandler={modify}
+          backgroundColor={colors.greyCream}
+          tintColor={colors.darkGrey}
         />
       </View>
       <LabelValueComponent
@@ -78,7 +79,11 @@ const MoreComponent = ({
         value={firstName && lastName ? `${firstName} ${lastName}` : '- '}
         modifyDisplay="none"
       />
-      <LabelValueComponent label="Adresse mail:" value={email ? email : '-'} />
+      <LabelValueComponent
+        label="Adresse mail:"
+        value={email ? email : '-'}
+        modifyDisplay="none"
+      />
       <LabelValueComponent
         label="Téléphone:"
         value={phone ? insertSpaceBetweenPairs(phone) : '-'}

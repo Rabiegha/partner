@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet} from 'react-native';
 import axios from 'axios';
 import Share from 'react-native-share';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
 import MoreComponent from '../components/screens/MoreComponent';
 import globalStyle from '../assets/styles/globalStyle';
 import colors from '../../colors/colors';
-import { BASE_URL, EMS_URL } from '../config/config';
-import { useEvent } from '../context/EventContext';
+import {BASE_URL, EMS_URL} from '../config/config';
+import {useEvent} from '../context/EventContext';
 
-const MoreScreen = ({ route, navigation }) => {
-  const { triggerListRefresh, updateAttendee } = useEvent();
+const MoreScreen = ({route, navigation}) => {
+  const {triggerListRefresh, updateAttendee} = useEvent();
 
   const {
     eventId,
@@ -21,9 +21,11 @@ const MoreScreen = ({ route, navigation }) => {
     phone,
     jobTitle,
     attendeeStatus,
+    organization,
   } = route.params;
 
-  const [localAttendeeStatus, setLocalAttendeeStatus] = useState(attendeeStatus);
+  const [localAttendeeStatus, setLocalAttendeeStatus] =
+    useState(attendeeStatus);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const MoreScreen = ({ route, navigation }) => {
     });
   };
 
-  const handleButton = async (status) => {
+  const handleButton = async status => {
     console.log('handleButton called');
     setLoading(true);
     console.log(`Updating status to: ${status}`);
@@ -68,7 +70,10 @@ const MoreScreen = ({ route, navigation }) => {
         setLocalAttendeeStatus(status);
         console.log('After updating local state:', status);
       } else {
-        console.error('Failed to update attendee status:', response.data.message);
+        console.error(
+          'Failed to update attendee status:',
+          response.data.message,
+        );
       }
     } catch (error) {
       console.error('Error updating attendee status:', error);
@@ -89,6 +94,18 @@ const MoreScreen = ({ route, navigation }) => {
       console.error(error);
     }
   };
+  const goToEdit = () => {
+    navigation.navigate('Edit', {
+      attendeeId: attendeeId,
+      eventId: eventId,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      jobTitle: jobTitle,
+      organization: organization,
+    });
+  };
 
   return (
     <View style={globalStyle.backgroundWhite}>
@@ -106,9 +123,11 @@ const MoreScreen = ({ route, navigation }) => {
           phone={phone}
           JobTitle={jobTitle}
           attendeeStatus={localAttendeeStatus}
+          organization={organization}
           handleButton={handleButton}
           Share={sendPdf}
-          loading={loading} // Pass loading prop
+          loading={loading}
+          modify={goToEdit}
         />
       </View>
     </View>

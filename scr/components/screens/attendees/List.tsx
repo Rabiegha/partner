@@ -1,4 +1,10 @@
-import React, {useContext,useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  useContext,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -13,13 +19,14 @@ import {useEvent} from '../../../context/EventContext';
 import colors from '../../../../colors/colors';
 import {BASE_URL} from '../../../config/config';
 import useUserId from '../../../hooks/useUserId';
-import emptyIcon from '../../../assets/images/empty.gif';
 import {Attendee} from '../../../interfaces/interfaces.tsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {demoEvents} from '../../../demo/demoEvents';
 import {AuthContext} from '../../../context/AuthContext.tsx';
+import emptyIcon from '../../../assets/images/empty.gif';
 
 import {useFocusEffect} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
   const [filteredData, setFilteredData] = useState<Attendee[]>([]);
@@ -34,7 +41,10 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useUserId();
   const {isDemoMode} = useContext(AuthContext);
-/*   console.log(isDemoMode); */
+  useEffect(() => {
+    console.log('eventId', eventId);
+  });
+  /*   console.log(isDemoMode); */
 
   const expirationTimeInMillis = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 
@@ -153,7 +163,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
 
       setFilteredData(filteredAttendees);
       setHasData(filteredAttendees.length > 0);
-/*       console.log('Filtered attendees data:', filteredAttendees); */
+      /*       console.log('Filtered attendees data:', filteredAttendees); */
     } catch (error) {
       console.error('Error fetching attendee details:', error);
       setHasData(false);
@@ -170,7 +180,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
       return () => {
         // Any cleanup can be done here
       };
-    }, [eventId])
+    }, [eventId]),
   );
 
   useEffect(() => {
@@ -213,7 +223,7 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
 
   return (
     <View style={styles.list}>
-{/*       <Button title="Clear Local Data" onPress={clearLocalData} /> */}
+      {/*       <Button title="Clear Local Data" onPress={clearLocalData} /> */}
       {isLoading ? (
         <ActivityIndicator color={colors.green} size="large" />
       ) : hasData ? (
@@ -232,7 +242,8 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
         />
       ) : (
         <View style={styles.noDataView}>
-          <Image source={emptyIcon} style={styles.gifStyle} />
+          <FastImage source={emptyIcon} style={styles.gifStyle} />
+          {/*           <Image source={emptyIcon} style={styles.gifStyle} /> */}
         </View>
       )}
     </View>
@@ -244,7 +255,7 @@ const styles = StyleSheet.create({
     height: 600,
   },
   contentContainer: {
-    paddingBottom: 200,
+    paddingBottom: 300,
   },
   gifStyle: {
     height: 300,

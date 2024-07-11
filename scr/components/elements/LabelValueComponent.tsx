@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native'; //
 import colors from '../../../colors/colors';
 import modifier from '../../../scr/assets/images/icons/Modifier.png';
 
-const LabelValueComponent = ({label, value, value2, modifyDisplay}) => {
+const LabelValueComponent = ({label, value, value2, modifyDisplay, modify}) => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -13,9 +13,11 @@ const LabelValueComponent = ({label, value, value2, modifyDisplay}) => {
           {value} {value2}
         </Text>
       </View>
-      <TouchableOpacity onPress={() => {}} style={[styles.editButton, {display: {modifyDisplay}}]}>
+     {/*  <TouchableOpacity
+        onPress={modify}
+        style={[styles.editButton, {display: modifyDisplay}]}>
         <Image source={modifier} style={styles.buttonImage} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

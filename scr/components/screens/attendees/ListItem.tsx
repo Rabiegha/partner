@@ -1,11 +1,19 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../colors/colors';
 import CustomSwitch from '../../elements/Switch';
 import axios from 'axios';
 import {useEvent} from '../../../context/EventContext';
-import { BASE_URL } from '../../../config/config';
+import {BASE_URL} from '../../../config/config';
+
+const {width} = Dimensions.get('window');
 
 const ListItem = React.memo(({item, searchQuery, onUpdateAttendee}) => {
   const navigation = useNavigation();
@@ -88,8 +96,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.greyCream,
     borderRadius: 10,
     padding: 10,
-    width: '100%',
+    width: width * 0.9,
     marginBottom: 10,
+    height: 55,
   },
   itemName: {
     fontSize: 16,

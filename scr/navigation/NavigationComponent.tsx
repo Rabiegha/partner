@@ -50,6 +50,7 @@ import Scan from '../assets/images/icons/Scan.png';
 import Profil from '../assets/images/icons/Profil.png';
 import Outils from '../assets/images/icons/Outils.png';
 import WebViewScreen from '../screens/WebView';
+import EditScreen from '../screens/Edit';
 
 const storage = new MMKV();
 const Tab = createBottomTabNavigator();
@@ -320,6 +321,7 @@ function AppNavigator() {
           }}
         />
         <Stack.Screen name="More" component={MoreScreen} />
+        <Stack.Screen name="Edit" component={EditScreen} />
         <Stack.Screen name="Badge" component={BadgeScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
         <Stack.Screen name="WebView" component={WebViewScreen} />

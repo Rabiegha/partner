@@ -21,6 +21,7 @@ import empty from '../assets/images/empty.gif';
 import {AuthContext} from '../context/AuthContext';
 import {demoEvents} from '../demo/demoEvents';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FastImage from 'react-native-fast-image';
 
 const EventListScreen = ({searchQuery, onEventSelect}) => {
   const [userId, setUserId] = useUserId();
@@ -233,7 +234,7 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
         )
       ) : (
         <View style={styles.noDataView}>
-          <Image source={empty} style={styles.gifStyle} />
+          <FastImage source={empty} style={styles.gifStyle} />
         </View>
       )}
     </View>
@@ -243,7 +244,7 @@ const EventListScreen = ({searchQuery, onEventSelect}) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
-    paddingHorizontal: 2,
+    paddingHorizontal: 20,
     flex: 1,
   },
   noDataView: {

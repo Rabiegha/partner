@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightRed,
     paddingVertical: 15,
     paddingHorizontal: 15,
-    zIndex: 50,
+    zIndex: 500,
     marginHorizontal: 20,
   },
   textNotification: {

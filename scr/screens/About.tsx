@@ -32,7 +32,7 @@ const AboutScreen = ({navigation}) => {
               url: "https://attendee-app.fr/conditions-d'utilisation.html",
             }),
         },
-/*         {
+        /*         {
           title: 'Cookies',
           action: () =>
             navigation.navigate('WebView', {
