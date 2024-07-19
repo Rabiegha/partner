@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import globalStyle from '../../assets/styles/globalStyle';
 import SuccessComponent from '../elements/notifications/SuccessComponent';
@@ -22,12 +24,14 @@ const EditAttendeesComponent = ({
   setSociete,
   setJobTitle,
   setSuccess,
+  setComment,
   nom,
   prenom,
   email,
   numeroTelephone,
   societe,
   jobTitle,
+  comment,
   success,
   inputErrors,
   resetInputError,
@@ -35,11 +39,11 @@ const EditAttendeesComponent = ({
   // Helper function to limit phone number to 9 digits
   const handlePhoneNumberChange = text => {
     // Remove the '+' character if the text starts with '+0'
-    if (text.startsWith('+0')) {
+    if (text != null && text.startsWith('+0')) {
       text = text.slice(1); // Remove the '+' character, keep the '0'
     }
     // Limit to 9 digits
-    if (text.length <= 9) {
+    if (text != null && text.length <= 9) {
       setNumeroTelephone(text);
       resetInputError('numeroTelephone');
     }
@@ -54,22 +58,10 @@ const EditAttendeesComponent = ({
   );
 
   return (
-    <View
+    <KeyboardAvoidingView
       style={styles.wrapper}
-      contentContainerStyle={styles.contentContainer}>
-      {success === true && (
-        <SuccessComponent
-          onClose={() => setSuccess(null)}
-          text={'Modifications enregistrées'}
-        />
-      )}
-      {success === false && (
-        <FailComponent
-          onClose={() => setSuccess(null)}
-          text={'Participant non ajouté'}
-        />
-      )}
-
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={0}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -146,8 +138,7 @@ const EditAttendeesComponent = ({
           }
           value={numeroTelephone}
           onChangeText={text => {
-            setNumeroTelephone(handlePhoneNumberChange(text));
-            resetInputError('numero de telephone');
+            setNumeroTelephone(text);
           }}
           keyboardType="numeric"
         />
@@ -173,12 +164,23 @@ const EditAttendeesComponent = ({
           value={jobTitle}
           onChangeText={text => setJobTitle(text)}
         />
-
+        <Text style={[styles.error, {opacity: 0}]}>Champ requis</Text>
+        <Text style={styles.text}>Commentaire</Text>
+        <TextInput
+          style={[
+            globalStyle.input,
+            {height: 120, lineHeight: 20, paddingTop: 20},
+          ]}
+          placeholderTextColor={colors.darkGrey}
+          value={comment}
+          onChangeText={text => setComment(text)}
+          multiline={true}
+        />
         <TouchableOpacity style={styles.button} onPress={onPress}>
           <Text style={styles.buttonText}>Enregistrer les modifications</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -195,9 +197,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     width: '100%',
-    height: 900,
+    paddingBottom: 300,
   },
   wrapper: {
+    flex: 1,
     top: 25,
   },
   button: {

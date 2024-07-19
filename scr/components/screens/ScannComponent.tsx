@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import HeaderComponent from '../elements/header/HeaderComponent';
 import colors from '../../../colors/colors';
 import {useNavigation} from '@react-navigation/native';
@@ -7,24 +14,38 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import axios from 'axios';
 import {EventProvider, useEvent} from '../../context/EventContext';
 import CustomMarker from '../elements/CustomMarker';
-import { BASE_URL } from '../../config/config';
+import {BASE_URL} from '../../config/config';
+import {MMKV} from 'react-native-mmkv';
+import Sound from 'react-native-sound';
+import RejectedModal from '../modals/RejectedModal';
+import CommentModal from '../modals/CommentModal';
+
+const storage = new MMKV();
 
 const ScannerComponent = () => {
+  const [userId, setUserId] = useState(
+    storage.getString('current_user_login_details_id'),
+  );
   const navigation = useNavigation();
   const [alertVisible, setAlertVisible] = useState(false);
-  const {triggerListRefresh} = useEvent();
-  const {eventId} = useEvent();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalRejectedVisible, setModalRejectedVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [attendeeId, setAttendeeId] = useState(null);
+  const [comment, setComment] = useState('');
+  const {triggerListRefresh, eventId} = useEvent();
+  const [isValidationMessageVisible, setIsValidationMessageVisible] =
+    useState(false);
 
-  // Définir 'handleBackPress' correctement à l'intérieur du composant pour accéder à 'navigation'
   const handleBackPress = () => {
-    navigation.goBack(); // Utilisez `goBack` ou la navigation spécifique selon vos besoins
+    navigation.goBack();
   };
 
   const handleAlertClose = () => {
-    setAlertVisible(false); // Réactiver le scanner une fois l'alerte fermée
+    setModalVisible(false);
+    setAlertVisible(false);
     triggerListRefresh();
   };
-
   const onSuccess = e => {
     if (!alertVisible) {
       const data = e.data;
@@ -32,89 +53,164 @@ const ScannerComponent = () => {
         event_id: eventId,
         name: data,
       };
-
-      // URL de l'API pour enregistrer les participants en scannant le code QR
-      const apiUrl = `${BASE_URL}/ajax_join_attendee/?event_id=${payload.event_id}&content=${data}`;
+      const apiUrl = `${BASE_URL}/ajax_join_attendee/?current_user_login_details_id=${userId}&event_id=${payload.event_id}&content=${data}`;
 
       axios
         .post(apiUrl, payload)
         .then(response => {
-          // Succès de l'enregistrement, afficher une alerte ou effectuer d'autres actions
+          setAlertVisible(true);
           if (response.data.status === true) {
-            setAlertVisible(true);
-            Alert.alert('Succès', 'Participation enregistrée.', [
-              {text: 'OK', onPress: handleAlertClose},
-            ]);
-            console.log(data);
+            setAttendeeId(response.data.attendee_details.attendee_id);
+            setModalMessage('Participant enregistré.');
+            setModalVisible(true);
           } else {
-            // Error scenario
-            console.error(
-              "Erreur lors de l'enregistrement:",
-              response.data.message,
-            ); // Assuming 'message' contains the error message
-            setAlertVisible(true);
-            Alert.alert(
-              'Erreur',
-              "Impossible d'enregistrer la participation.",
-              [{text: 'OK', onPress: handleAlertClose}],
-            );
-            console.log(data);
+            setModalRejectedVisible(true);
+            setModalMessage("Impossible d'enregistrer le participant.");
+            setTimeout(() => {
+              setModalRejectedVisible(false);
+              triggerListRefresh();
+              setAlertVisible(false);
+            }, 2000);
           }
         })
         .catch(error => {
-          // Échec de l'enregistrement, afficher une alerte d'erreur
-          console.error("Erreur lors de l'enregistrement:", error);
-          setAlertVisible(true);
-          Alert.alert('Erreur', "Impossible d'enregistrer la participation.", [
-            {text: 'OK', onPress: handleAlertClose},
-          ]);
+          setModalRejectedVisible(true);
+          setModalMessage('Erreur de réseau, veuillez réessayer.');
+          setTimeout(() => {
+            triggerListRefresh();
+            setModalRejectedVisible(false);
+            setAlertVisible(false);
+          }, 2000);
         });
     }
   };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // Réinitialiser l'état lorsque le composant est monté ou revenu à la vue
       setAlertVisible(false);
     });
-
     return unsubscribe;
   }, [navigation]);
 
+  const handleAddComment = async () => {
+    const apiUrl = `${BASE_URL}/ajax_update_attendee/?current_user_login_details_id=${userId}&attendee_id=${attendeeId}&comment=${encodeURIComponent(
+      comment,
+    )}`;
+    try {
+      const response = await axios.post(apiUrl);
+      if (response.data.status) {
+        playSound();
+        setIsValidationMessageVisible(true);
+        setTimeout(() => {
+          setIsValidationMessageVisible(false);
+          setModalVisible(false);
+          setAlertVisible(false);
+          triggerListRefresh();
+          setComment('');
+        }, 2000);
+        console.log('Enregistrement réussi:', response.data);
+      } else {
+        console.error('Enregistrement échoué:', response.data.message);
+        setModalVisible(false);
+        setModalRejectedVisible(true);
+        setTimeout(() => {
+          setModalRejectedVisible(false);
+          setAlertVisible(false);
+          triggerListRefresh();
+          setComment('');
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement:", error);
+      setModalVisible(false);
+      setModalRejectedVisible(true);
+      setTimeout(() => {
+        setModalRejectedVisible(false);
+        setAlertVisible(false);
+        triggerListRefresh();
+        setComment('');
+      }, 2000);
+    }
+  };
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+/*   const playSound = () => {
+    const sound = new Sound(
+      '../../../assets/sounds/Success.mp3',
+      Sound.MAIN_BUNDLE,
+      error => {
+        if (error) {
+          console.log('Failed to load the sound', error);
+          return;
+        }
+        sound.play(() => sound.release());
+      },
+    );
+  }; */
+
   return (
     <EventProvider>
-      <View style={styles.container}>
-        <View style={styles.overlay}>
-          <HeaderComponent
-            title={'Scan QR Code'}
-            color={colors.greyCream}
-            handlePress={handleBackPress}
-          />
+      <TouchableWithoutFeedback
+        onPress={handleDismissKeyboard}
+        accessible={false}>
+        <View style={{flex: 1}}>
+          <ScrollView contentContainerStyle={styles.container}>
+            <HeaderComponent
+              title={'Scan QR Code'}
+              color={colors.greyCream}
+              handlePress={handleBackPress}
+            />
+            {!alertVisible && (
+              <QRCodeScanner
+                onRead={onSuccess}
+                bottomContent={<View />}
+                showMarker={true}
+                checkAndroid6Permissions={true}
+                cameraStyle={styles.cameraStyle}
+                customMarker={<CustomMarker />}
+              />
+            )}
+            <CommentModal
+              visible={modalVisible}
+              message={modalMessage}
+              onClose={handleAlertClose}
+              onPress={handleAddComment}
+              value={comment}
+              onChangeText={setComment}
+              isValidationMessageVisible={isValidationMessageVisible}
+              validationMessage={undefined}
+            />
+            <RejectedModal
+              visible={modalRejectedVisible}
+              message={modalMessage}
+              onClose={handleAlertClose}
+              onPress={handleAddComment}
+              value={comment}
+              onChangeText={setComment}
+              isValidationMessageVisible={isValidationMessageVisible}
+              validationMessage={undefined}
+            />
+          </ScrollView>
         </View>
-        {!alertVisible && (
-          <QRCodeScanner
-            onRead={onSuccess}
-            bottomContent={<View />}
-            showMarker={true}
-            checkAndroid6Permissions={true}
-            cameraStyle={{height: '98%', top: 30}}
-            customMarker={<CustomMarker />}
-          />
-        )}
-      </View>
+      </TouchableWithoutFeedback>
     </EventProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'column',
     backgroundColor: 'black',
   },
   overlay: {
-    zIndex: 1,
+    flex: 1,
+  },
+  cameraStyle: {
+    flex: 1,
+    height: '96%',
+    top: 40,
   },
 });
-
 export default ScannerComponent;

@@ -8,6 +8,7 @@ import globalStyle from '../assets/styles/globalStyle';
 import colors from '../../colors/colors';
 import {BASE_URL, EMS_URL} from '../config/config';
 import {useEvent} from '../context/EventContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 const MoreScreen = ({route, navigation}) => {
   const {triggerListRefresh, updateAttendee} = useEvent();
@@ -22,6 +23,7 @@ const MoreScreen = ({route, navigation}) => {
     jobTitle,
     attendeeStatus,
     organization,
+    comment,
   } = route.params;
 
   const [localAttendeeStatus, setLocalAttendeeStatus] =
@@ -104,6 +106,7 @@ const MoreScreen = ({route, navigation}) => {
       phone: phone,
       jobTitle: jobTitle,
       organization: organization,
+      comment: comment,
     });
   };
 
@@ -124,6 +127,7 @@ const MoreScreen = ({route, navigation}) => {
           JobTitle={jobTitle}
           attendeeStatus={localAttendeeStatus}
           organization={organization}
+          comment={comment}
           handleButton={handleButton}
           Share={sendPdf}
           loading={loading}

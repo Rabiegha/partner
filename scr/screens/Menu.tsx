@@ -33,15 +33,15 @@ const MenuScreen = ({navigation}) => {
           title: 'Liste des participants',
           action: () => navigation.navigate('Attendees'),
         },
-        {
+        /*         {
           title: 'Ajouter un participant',
           action: () => navigation.navigate('Add'),
-        },
+        }, */
         {title: 'Scan', action: () => navigation.navigate('Scann')},
-        {
+        /*         {
           title: 'Profile',
           action: () => navigation.navigate('Profil'),
-        },
+        }, */
       ],
     },
     {

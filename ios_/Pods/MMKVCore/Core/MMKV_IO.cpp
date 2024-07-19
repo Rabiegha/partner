@@ -49,6 +49,10 @@
 #    endif
 #endif // MMKV_APPLE
 
+#ifndef MMKV_WIN32
+#    include <unistd.h>
+#endif
+
 using namespace std;
 using namespace mmkv;
 using KVHolderRet_t = std::pair<bool, KeyValueHolder>;
@@ -152,7 +156,7 @@ void MMKV::partialLoadFromFile() {
                 size_t addedSize = m_actualSize - position;
                 auto basePtr = (uint8_t *) m_file->getMemory() + Fixed32Size;
                 // incremental update crc digest
-                m_crcDigest = (uint32_t) CRC32(m_crcDigest, basePtr + position, addedSize);
+                m_crcDigest = (uint32_t) CRC32(m_crcDigest, basePtr + position, (z_size_t) addedSize);
                 if (m_crcDigest == m_metaInfo->m_crcDigest) {
                     MMBuffer inputBuffer(basePtr, m_actualSize, MMBufferNoCopy);
 #ifndef MMKV_DISABLE_CRYPT
@@ -1384,6 +1388,7 @@ void MMKV::trim() {
     SCOPED_LOCK(m_lock);
     MMKVInfo("prepare to trim %s", m_mmapID.c_str());
 
+    SCOPED_LOCK(m_exclusiveProcessLock);
     checkLoadData();
     if (!isFileValid()) {
         MMKVWarning("[%s] file not valid", m_mmapID.c_str());
@@ -1396,7 +1401,6 @@ void MMKV::trim() {
     } else if (m_file->getFileSize() <= m_expectedCapacity) {
         return;
     }
-    SCOPED_LOCK(m_exclusiveProcessLock);
 
     fullWriteback();
     auto oldSize = m_file->getFileSize();

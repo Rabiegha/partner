@@ -35,11 +35,11 @@ const AttendeesScreen = () => {
   const [modalAnimation] = useState(new Animated.Value(-300));
   const [success, setSuccess] = useState(false);
   const [totalListAttendees, setTotalListAttendees] = useState(0);
-  const [checkedInAttendees, setCheckedInAttendees] = useState(0);
   const [filterCriteria, setFilterCriteria] = useState({
     status: 'all', // Possible values: 'all', 'checked-in', 'not-checked-in'
     // You can add more filter criteria here as needed
   });
+  const [numberText, setNumberText] = useState('Participants');
 
   const openModal = () => {
     setModalVisible(true);
@@ -79,7 +79,7 @@ const AttendeesScreen = () => {
   useEffect(() => {
     // Calculate progress when totalAttendees or checkedInAttendees change
     // Progress calculation might need further adjustment based on your logic
-  }, [totalListAttendees, checkedInAttendees]);
+  }, [totalListAttendees]);
 
   const [filter, setFilter] = useState({
     status: 'all', // all, checked-in, not checked-in
@@ -91,7 +91,7 @@ const AttendeesScreen = () => {
   };
   const updateProgress = (total, checkedIn) => {
     setTotalListAttendees(total);
-    setCheckedInAttendees(checkedIn);
+    setNumberText(total === 1 ? 'Participant' : 'Participants');
   };
   const clearSearch = () => {
     if (searchQuery !== '') {
@@ -126,13 +126,10 @@ const AttendeesScreen = () => {
           value={searchQuery}
         />
 
-        <ProgressText
-          totalCheckedAttendees={checkedInAttendees}
-          totalAttendees={totalListAttendees}
-        />
-        <ProgressBar
+          <ProgressText totalAttendees={totalListAttendees} text={numberText} />
+{/*         <ProgressBar
           progress={(checkedInAttendees / totalListAttendees) * 100}
-        />
+        /> */}
         {/*         <TouchableOpacity onPress={showNotification} style={styles.button}>
           <Text style={styles.buttonText}>Afficher la notification</Text>
         </TouchableOpacity> */}
@@ -143,7 +140,7 @@ const AttendeesScreen = () => {
           onShowNotification={showNotification}
           filterCriteria={filterCriteria}
         />
-
+{/* 
         <Modal
           animationType="none"
           transparent={true}
@@ -165,14 +162,12 @@ const AttendeesScreen = () => {
                     filterCriteria={filterCriteria}
                     setFilterCriteria={setFilterCriteria}
                     tout={totalListAttendees}
-                    checkedIn={checkedInAttendees}
-                    notChechkedIn={totalListAttendees - checkedInAttendees}
                   />
                 }
               </Animated.View>
             </TouchableWithoutFeedback>
           </TouchableOpacity>
-        </Modal>
+        </Modal> */}
       </View>
     </View>
   );

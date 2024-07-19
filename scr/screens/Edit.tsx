@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
 import {useFocusEffect} from '@react-navigation/native';
@@ -8,6 +8,9 @@ import axios from 'axios';
 import {BASE_URL} from '../config/config';
 import EditComponent from '../components/screens/EditComponent';
 import useUserId from '../hooks/useUserId';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FailComponent from '../components/elements/notifications/FailComponent';
+import SuccessComponent from '../components/elements/notifications/SuccessComponent';
 
 const EditScreen = ({navigation, route}) => {
   useFocusEffect(
@@ -28,6 +31,7 @@ const EditScreen = ({navigation, route}) => {
     phone,
     organization,
     jobTitle,
+    comment,
   } = route.params;
 
   const [nomModify, setNomModify] = useState(lastName);
@@ -36,6 +40,7 @@ const EditScreen = ({navigation, route}) => {
   const [numeroTelephoneModify, setNumeroTelephoneModify] = useState(phone);
   const [societeModify, setSocieteModify] = useState(organization);
   const [jobTitleModify, setJobTitleModify] = useState(jobTitle);
+  const [commentModify, setCommentModify] = useState(comment);
   const [inputErrors, setInputErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -54,13 +59,13 @@ const EditScreen = ({navigation, route}) => {
     if (!prenomModify) {
       errors.prenom = true;
     }
-    // Validate phone number (starts with 0 and has at least 9 digits)
+    /*     // Validate phone number (starts with 0 and has at least 9 digits)
     if (numeroTelephoneModify) {
       const phoneRegex = /^0\d{8,}$/;
       if (!phoneRegex.test(numeroTelephoneModify)) {
         errors.numeroTelephone = true;
       }
-    }
+    } */
 
     // Validate email format
     if (emailModify) {
@@ -91,12 +96,13 @@ const EditScreen = ({navigation, route}) => {
       phone: numeroTelephoneModify,
       organization: societeModify,
       jobTitle: jobTitleModify,
+      comment: commentModify,
       status_id: '2',
     };
 
     try {
       // URL de l'API pour ajouter un participants
-      const url = `${BASE_URL}/ajax_update_attendee/?current_user_login_details_id=${userId}&attendee_id=${attendeeId}&first_name=${attendeeData.first_name}&last_name=${attendeeData.last_name}&email=${attendeeData.email}&phone=${attendeeData.phone}&organization=${attendeeData.organization}&designation=${attendeeData.jobTitle}`;
+      const url = `${BASE_URL}/ajax_update_attendee/?current_user_login_details_id=${userId}&attendee_id=${attendeeId}&first_name=${attendeeData.first_name}&last_name=${attendeeData.last_name}&email=${attendeeData.email}&phone=${attendeeData.phone}&organization=${attendeeData.organization}&designation=${attendeeData.jobTitle}&comment=${attendeeData.comment}`;
 
       const response = await axios.post(url);
 
@@ -127,8 +133,18 @@ const EditScreen = ({navigation, route}) => {
     console.log('attendeeId', attendeeId);
   });
 
-  const handleGoBack = () => {
-    navigation.goBack();
+  const handleGoBack = (updatedAttendee) => {
+    navigation.navigate('More', {
+      eventId: eventId,
+      attendeeId: attendeeId,
+      firstName: prenomModify,
+      lastName: nomModify,
+      email: emailModify,
+      phone: numeroTelephoneModify,
+      organization: societeModify,
+      jobTitle: jobTitleModify,
+      comment: commentModify,
+    });
   };
 
   const resetInputError = field => {
@@ -145,7 +161,22 @@ const EditScreen = ({navigation, route}) => {
         title="Modifier"
         color={undefined}
         handlePress={handleGoBack}
+        backgroundColor={'white'}
       />
+      <View style={styles.notification}>
+        {success === true && (
+          <SuccessComponent
+            onClose={() => setSuccess(null)}
+            text={'Modifications enregistrées'}
+          />
+        )}
+        {success === false && (
+          <FailComponent
+            onClose={() => setSuccess(null)}
+            text={'Participant non ajouté'}
+          />
+        )}
+      </View>
       <EditComponent
         onPress={handleEnregistrer}
         style={[globalStyle.container, {marginTop: 50}]}
@@ -156,6 +187,7 @@ const EditScreen = ({navigation, route}) => {
         jobTitle={jobTitleModify}
         success={success}
         numeroTelephone={numeroTelephoneModify}
+        comment={commentModify}
         setNom={setNomModify}
         setPrenom={setPrenomModify}
         setEmail={setEmailModify}
@@ -163,11 +195,19 @@ const EditScreen = ({navigation, route}) => {
         setSociete={setSocieteModify}
         setJobTitle={setJobTitleModify}
         setSuccess={setSuccess}
+        setComment={setCommentModify}
         inputErrors={inputErrors}
         resetInputError={resetInputError}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  notification: {
+    marginTop: 50,
+    zIndex: 20,
+  },
+});
 
 export default EditScreen;

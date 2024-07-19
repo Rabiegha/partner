@@ -1,5 +1,13 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet, SafeAreaView, Platform} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  SafeAreaView,
+  Platform,
+} from 'react-native';
 import colors from '../../../../colors/colors';
 import Retour from '../../../assets/images/icons/Retour.png';
 import Filtre from '../../../assets/images/icons/Filtre.png';
@@ -10,10 +18,14 @@ const HeaderParticipants = ({onLeftPress, Title, onRightPress}) => {
       <TouchableOpacity onPress={onLeftPress} style={styles.backButton}>
         <Image source={Retour} style={styles.buttonImage} />
       </TouchableOpacity>
-      <Text style={styles.Title}>{Title}</Text>
-      <TouchableOpacity onPress={onRightPress} style={styles.backButton}>
-        <Image source={Filtre} style={styles.buttonImageBlack} />
-      </TouchableOpacity>
+      <View style={styles.titleContainer}>
+        <Text style={styles.Title}>{Title}</Text>
+      </View>
+      <View style={styles.rightButtonContainer}>
+        {/*       <TouchableOpacity onPress={onRightPress} style={styles.backButton}>
+          <Image source={Filtre} style={styles.buttonImageBlack} />
+        </TouchableOpacity> */}
+      </View>
     </SafeAreaView>
   );
 };
@@ -29,15 +41,23 @@ const styles = StyleSheet.create({
     maxHeight: 60,
     height: 60,
     zIndex: 10,
+    position: 'relative',
   },
   backButton: {
     padding: 10,
   },
+  titleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 25,
+  },
   Title: {
-    fontWeight: 'bold',
-    textAlign: 'center',
     fontSize: 18,
-    maxWidth: 200,
+    fontWeight: 'bold',
+    color: colors.darkGrey,
+  },
+  rightButtonContainer: {
+    width: 40,
   },
   buttonImage: {
     width: 15,

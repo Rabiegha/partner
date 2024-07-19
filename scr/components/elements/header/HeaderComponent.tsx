@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../colors/colors';
 import retourIcon from '../../../assets/images/icons/Retour.png';
 
-const HeaderComponent = ({title, handlePress, color}) => {
+const HeaderComponent = ({title, handlePress, color, backgroundColor}) => {
   const navigation = useNavigation();
 
   const handleGoBack = () => {
@@ -12,7 +12,7 @@ const HeaderComponent = ({title, handlePress, color}) => {
   };
 
   return (
-    <SafeAreaView style={styles.headerContainer}>
+    <SafeAreaView style={[styles.headerContainer, {backgroundColor: backgroundColor}]}>
       <TouchableOpacity onPress={handlePress} style={styles.backButton}>
         <Image source={retourIcon} style={styles.buttonImage} />
       </TouchableOpacity>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     top: 25,
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.darkGrey,
     position: 'absolute',
     left: 0,
     right: 0,

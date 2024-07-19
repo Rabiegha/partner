@@ -29,8 +29,22 @@ import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
 const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
-  const [filteredData, setFilteredData] = useState<Attendee[]>([]);
-  const [allAttendees, setAllAttendees] = useState<Attendee[]>([]);
+  const [openSwipeable, setOpenSwipeable] = useState(null);
+  const handleSwipeableOpen = (id, swipeableRef) => {
+    if (openSwipeable && openSwipeable.id !== id) {
+      openSwipeable.current.close();
+    }
+    setOpenSwipeable({id, ref: swipeableRef});
+  };
+
+  const handleSwipeableClose = (id) => {
+    if (openSwipeable && openSwipeable.id === id) {
+      setOpenSwipeable(null);
+    }
+  };
+
+  const [filteredData, setFilteredData] = useState([]);
+  const [allAttendees, setAllAttendees] = useState([]);
   const flatListRef = useRef(null);
   const [totalAttendees, setTotalAttendees] = useState(0);
   const [totalCheckedAttendees, setTotalCheckedAttendees] = useState(0);
@@ -71,7 +85,6 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
           console.log(`Data for key: ${key} is up-to-date`);
           return parsedData.data;
         } else {
-          // Supprimer les données si elles sont obsolètes
           await AsyncStorage.removeItem(key);
           console.log(`Data for key: ${key} expired and removed`);
         }
@@ -237,6 +250,9 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
               item={item}
               searchQuery={searchQuery}
               onUpdateAttendee={handleUpdateAttendee} // Pass the update function to ListItem
+              onSwipeableOpen={handleSwipeableOpen}
+              onSwipeableClose={handleSwipeableClose}
+              isActive={openSwipeable ? openSwipeable.id === item.id : false}
             />
           )}
         />

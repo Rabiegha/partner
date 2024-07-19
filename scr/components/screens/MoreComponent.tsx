@@ -21,7 +21,8 @@ const MoreComponent = ({
   handleButton,
   Share,
   loading,
-  modify
+  modify,
+  comment,
 }) => {
   console.log('Current attendeeStatus:', attendeeStatus);
   console.log('Current attendeeStatus:', JobTitle);
@@ -96,8 +97,17 @@ const MoreComponent = ({
         label="Job Title:"
         value={JobTitle ? JobTitle : '-'}
       />
+{/*       <LabelValueComponent
+        label="Commentaire:"
+        value={comment ? comment : '-'}
+        value2={undefined}
+      /> */}
+      <View style={styles.commentaire}>
+        <Text style={styles.commentaireTitle}>Commentaire:</Text>
+        <Text>{comment ? comment : '-'}</Text>
+      </View>
       {/*<Text>Status: {attendeeStatus}</Text> */}
-      {parsedAttendeeStatus === 0 ? (
+      {/* {parsedAttendeeStatus === 0 ? (
         <LargeButton
           title="Check-in"
           onPress={() => handleButton(1)}
@@ -112,7 +122,7 @@ const MoreComponent = ({
           holdDuration={1000} // Duration to hold the button for 3 seconds
           loading={loading} // Pass loading prop
         />
-      )}
+      )} */}
     </ScrollView>
   );
 };
@@ -120,7 +130,7 @@ const MoreComponent = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    height: 830,
+    paddingBottom: 150,
   },
   imageContainer: {
     marginBottom: 10,
@@ -133,6 +143,14 @@ const styles = StyleSheet.create({
   topButtonsContainer: {
     flexDirection: 'row',
     marginBottom: 20,
+  },
+  commentaire: {
+    width: '100%',
+  },
+  commentaireTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
 });
 

@@ -21,7 +21,18 @@ const SuccessComponent = ({onClose, text}) => {
       duration: 500, // Durée plus courte pour un effet rapide
       useNativeDriver: true,
     }).start();
-  }, [fadeAnim]);
+    //timeout
+    const timeout = setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        onClose();
+      });
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, [fadeAnim, onClose]);
 
   return (
     <Animated.View style={[styles.notification, {opacity: fadeAnim}]}>
