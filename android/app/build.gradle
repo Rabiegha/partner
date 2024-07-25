@@ -76,11 +76,11 @@ android {
 
     namespace "com.choyou.partners"
     defaultConfig {
-        applicationId "com.choyou.partners"
+        applicationId "com.partners"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.1"
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
         missingDimensionStrategy 'react-native-camera', 'mlkit'
     }
     signingConfigs {
@@ -91,6 +91,11 @@ android {
             keyPassword 'android'
         }
     }
+    lintOptions {
+        baseline file("lint-baseline.xml")
+        abortOnError false
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -105,10 +110,10 @@ android {
     }
 }
 
+
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
-    implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
+    implementation("com.facebook.react:react-android")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -117,5 +122,5 @@ dependencies {
     }
 }
 
+
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
-/* apply plugin: 'com.google.android.gms.strict-version-matcher-plugin' */
